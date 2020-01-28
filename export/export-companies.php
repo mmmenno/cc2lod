@@ -27,7 +27,6 @@ while ($row = $result->fetch_assoc()) {
     echo "<http://www.cinemacontext.nl/id/R" . voorloopnullen($row['new_id']) . ">\n";
 
     echo "\trdfs:label \"" . $row['name'] . "\" ;\n";
-    echo "\tschema:location <http://www.cinemacontext.nl/place/" . $row['address_id'] . "> ;\n";
     if(strlen($row['info'])){
     	echo "\tschema:description \"" . $row['info'] . "\" ;\n";
 	}
