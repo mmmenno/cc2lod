@@ -1,6 +1,6 @@
 # Exportscripts
 
-For each entity, a script queries the MySQL database, converts the data to rdf and outputs it as a turtle file. Sometimes, most notably in [export-programmes.php](export-programmes.php), this is a rather timeconsuming process - largely due to a wondrous system of replacing ids with new ids, but only for presentation.
+For each entity, a script queries the MySQL database, converts the data to rdf and outputs it as a turtle file. Sometimes, most notably in [export-programmes.php](export-programmes.php), this is a rather timeconsuming process - largely due to a wondrous system of replacing ids with new ids and using them both.
 
 The resulting turtle looks like this:
 
@@ -22,6 +22,8 @@ The resulting turtle looks like this:
 ```
 
 ## persons
+
+A person might work for a company.
 
 ```
 <http://www.cinemacontext.nl/id/P000007>
@@ -46,6 +48,8 @@ The resulting turtle looks like this:
 
 ## theaters
 
+Theaters, or 'venues' are organizations existing on a specific location with a specific name. Usually they are owned by a company (a parentorganization).
+
 ```
 <http://www.cinemacontext.nl/id/B000006>
 	rdfs:label "Cineac Damrak" ;
@@ -60,8 +64,28 @@ The resulting turtle looks like this:
 	a schema:MovieTheater .
 ```
 
+Not all 'theaters' are just a `schema:MovieTheater`. Mobile cinemas fall in the class `wd:Q6605486` (mobile cinema) as well:
+
+```
+<http://www.cinemacontext.nl/id/B>
+	rdfs:label "Mobile Theatre" ;
+	schema:location <http://www.cinemacontext.nl/place/id1335708120533> ;
+	a schema:MovieTheater, wd:Q6605486 .
+``` 
+
+Sometimes a 'theater' is not a `schema:MovieTheater`, but a `schema:EventVenue` instead.
+
+```
+<http://www.cinemacontext.nl/id/B>
+	rdfs:label "Kurhaus (Scheveningen)" ;
+	schema:location <http://www.cinemacontext.nl/place/Perc978> ;
+	a schema:EventVenue .
+```
+
 
 ## places
+
+A 'place' is just that: a point on the map. Sometimes a place might have a 1:1 relation with a building, but it's perfectly possible there were several buildings on that spot, over time.
 
 ```
 <http://www.cinemacontext.nl/place/id1104540487036>
@@ -78,6 +102,8 @@ The resulting turtle looks like this:
 
 ## construction history
 
+Construction events include the dc:types 'Nieuwbouw' and 'Verbouwing'. Constructionevents are of the class `sem:Event`, which helps to distinguish these events from 'programmes' - that are modelled as `schema:Event`.
+
 ```
 <http://www.cinemacontext.nl/constructionevent/Perc188-01>
 	sem:hasPlace <http://www.cinemacontext.nl/address/Perc188> ;
@@ -93,7 +119,20 @@ The resulting turtle looks like this:
 	a sem:Event .
 ```
 
+Surprisingly, when a building is demolished, the dc:type 'Verbouwing' is used
+
+```
+<http://www.cinemacontext.nl/constructionevent/id1114084252705-03>
+	sem:hasPlace <http://www.cinemacontext.nl/address/id1114084252705> ;
+	dc:type "Verbouwing" ;
+	schema:description "verwoest bij bombardement" ;
+	a sem:Event .
+```
+
+
 ## programmes
+
+A 'programme' is a `schema:Event` consisting of one or more `schema:ScreeningEvent`s. Sometimes a film was screened under another name (a Dutch name, for example). In such cases this name is mentioned as a `schema:alternateName`.
 
 ```
 <http://www.cinemacontext.nl/id/V082378>
