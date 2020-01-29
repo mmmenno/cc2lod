@@ -16,7 +16,7 @@ echo $prefixes;
 
 $sql = "select * 
 		from tbladdress 
-		limit 30";
+		limit 3000000";
 $result = $mysqli->query($sql);
 
 while ($row = $result->fetch_assoc()) {
@@ -47,7 +47,7 @@ while ($row = $result->fetch_assoc()) {
     }
 
     if(strlen($row['info'])){
-        echo "\tschema:description \"" . $row['info'] . "\" ;\n";
+        echo "\tschema:description \"" . addslashes($row['info']) . "\" ;\n";
     }
 
 

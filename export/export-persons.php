@@ -9,6 +9,7 @@ $prefixes = "
 @prefix sem: <http://semanticweb.cs.vu.nl/2009/11/sem/> . 
 @prefix owl: <http://www.w3.org/2002/07/owl#> . 
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> . 
+@prefix pnv: <https://w3id.org/pnv#> . 
 @prefix schema: <http://schema.org/> . \n\n";
 
 echo $prefixes;
@@ -17,7 +18,7 @@ $sql = "select p.*, i.new_id, f.first_name
 		from tblperson as p 
 		left join PersID as i on p.person_id = i.old_id
 		left join tblPersonFirstNames as f on p.person_id = f.person_id
-		limit 30";
+		limit 3000000";
 $result = $mysqli->query($sql);
 
 while ($row = $result->fetch_assoc()) {
@@ -60,7 +61,7 @@ while ($row = $result->fetch_assoc()) {
 	    echo "\t\ta schema:OrganizationRole ;\n";
 	    echo "\t\tschema:roleName \"" . $r1['job_type'] . "\" ;\n";
 	    if(strlen($r1['info'])){
-	    	echo "\t\tschema:description \"" . $r1['info'] . "\" ;\n";
+	    	echo "\t\tschema:description \"" . addslashes($r1['info']) . "\" ;\n";
 		}
 	    echo "\t\tschema:worksFor <http://www.cinemacontext.nl/id/R" . voorloopnullen($r1['new_id']) . "> ;\n";
 	    if(strlen($period)){

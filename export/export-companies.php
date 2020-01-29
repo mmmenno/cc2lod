@@ -17,7 +17,7 @@ echo $prefixes;
 $sql = "select c.*, i.new_id 
 		from tblcompany as c 
 		left join RPID as i on c.company_id = i.old_id
-		limit 30";
+		limit 30000000";
 $result = $mysqli->query($sql);
 
 while ($row = $result->fetch_assoc()) {
@@ -26,9 +26,9 @@ while ($row = $result->fetch_assoc()) {
 
     echo "<http://www.cinemacontext.nl/id/R" . voorloopnullen($row['new_id']) . ">\n";
 
-    echo "\trdfs:label \"" . $row['name'] . "\" ;\n";
+    echo "\trdfs:label \"" . addslashes($row['name']) . "\" ;\n";
     if(strlen($row['info'])){
-    	echo "\tschema:description \"" . $row['info'] . "\" ;\n";
+    	echo "\tschema:description \"" . addslashes($row['info']) . "\" ;\n";
 	}
     if(strlen($row['date_established'])){
     	$founded = turtletime($row['date_established'],false);
@@ -82,7 +82,7 @@ while ($row = $result->fetch_assoc()) {
 	    if(strlen($period)){
 	    	echo str_replace("\t","\t\t",$period);
 	    }
-	    echo  "\t\ta pext:IndustrySector .\n";
+	    echo  "\t\ta pext:IndustrySector ;\n";
 	    echo "\t] ;\n";
 
 	}

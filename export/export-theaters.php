@@ -16,7 +16,7 @@ echo $prefixes;
 $sql = "select v.*, i.new_id 
 		from tblvenue as v 
 		left join BiosID as i on v.venue_id = i.old_id
-		limit 30";
+		limit 300000000";
 $result = $mysqli->query($sql);
 
 while ($row = $result->fetch_assoc()) {
@@ -25,10 +25,10 @@ while ($row = $result->fetch_assoc()) {
 
     echo "<http://www.cinemacontext.nl/id/B" . voorloopnullen($row['new_id']) . ">\n";
 
-    echo "\trdfs:label \"" . $row['name'] . "\" ;\n";
+    echo "\trdfs:label \"" . addslashes($row['name']) . "\" ;\n";
     echo "\tschema:location <http://www.cinemacontext.nl/place/" . $row['address_id'] . "> ;\n";
     if(strlen($row['info'])){
-    	echo "\tschema:description \"" . $row['info'] . "\" ;\n";
+    	echo "\tschema:description \"" . addslashes($row['info']) . "\" ;\n";
 	}
 
 
@@ -47,7 +47,7 @@ while ($row = $result->fetch_assoc()) {
 		echo "\tschema:parentOrganization [\n";
 	    echo "\t\tschema:parentOrganization <http://www.cinemacontext.nl/id/R" . voorloopnullen($r1['new_id']) . "> ;\n";
 	    if(strlen($r1['info'])){
-	    	echo "\t\tschema:description \"" . $r1['info'] . "\" ;\n";
+	    	echo "\t\tschema:description \"" . addslashes($r1['info']) . "\" ;\n";
 		}
 	    if(strlen($period)){
 	    	echo str_replace("\t","\t\t",$period);
