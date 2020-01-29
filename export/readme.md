@@ -48,7 +48,7 @@ A person might work for a company.
 
 ## theaters
 
-Theaters, or 'venues' are organizations existing on a specific location with a specific name. Usually they are owned by a company (a parentorganization).
+Theaters, or 'venues' are organizations existing on a specific location with a specific name. Usually they are owned by a company.
 
 ```
 <http://www.cinemacontext.nl/id/B000006>
@@ -64,7 +64,7 @@ Theaters, or 'venues' are organizations existing on a specific location with a s
 	a schema:MovieTheater .
 ```
 
-Not all 'theaters' are just a `schema:MovieTheater`. Mobile cinemas fall in the class `wd:Q6605486` (mobile cinema) as well:
+Not all 'theaters' are just a `schema:MovieTheater`. Mobile cinemas are of the class `wd:Q6605486` (mobile cinema) as well:
 
 ```
 <http://www.cinemacontext.nl/id/B>
@@ -102,7 +102,7 @@ A 'place' is just that: a point on the map. Sometimes a place might have a 1:1 r
 
 ## construction history
 
-Construction events include the dc:types 'Nieuwbouw' and 'Verbouwing'. Constructionevents are of the class `sem:Event`, which helps to distinguish these events from 'programmes' - that are modelled as `schema:Event`.
+Construction events include the dc:types 'Nieuwbouw' and 'Verbouwing'. Constructionevents are of the class `sem:Event`, which helps to distinguish these events from 'programmes' - modelled as `schema:Event`.
 
 ```
 <http://www.cinemacontext.nl/constructionevent/Perc188-01>
@@ -132,7 +132,7 @@ Surprisingly, when a building is demolished, the dc:type 'Verbouwing' is used
 
 ## programmes
 
-A 'programme' is a `schema:Event` consisting of one or more `schema:ScreeningEvent`s. Sometimes a film was screened under another name (a Dutch name, for example). In such cases this name is mentioned as a `schema:alternateName`.
+A 'programme' is a `schema:Event` consisting of one or more `schema:ScreeningEvent`s, that was held in a specific theater on one or more dates. Sometimes a film was screened under another name (a Dutch name, for example). In such cases this name is mentioned as a `schema:alternateName`.
 
 ```
 <http://www.cinemacontext.nl/id/V082378>
