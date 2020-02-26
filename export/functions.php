@@ -1,5 +1,11 @@
 <?php
 
+function esc($string){
+    $str = str_replace("\n", " ", trim($string));
+    $str = addslashes($str);
+    return $str;
+}
+
 function turtletime($start,$end) {
 
     $daysinmonth = array(0,31,28,31,30,31,30,31,31,30,31,30,31);

@@ -22,13 +22,20 @@ $result = $mysqli->query($sql);
 while ($row = $result->fetch_assoc()) {
     
 
+	if(!strlen($row['new_id'])){
+		if($row['venue_type']=="mobile theatre"){
+			echo "<http://www.cinemacontext.nl/stand/" . $row['venue_id'] . ">\n";
+		}else{
+			echo "<http://www.cinemacontext.nl/eventvenue/" . $row['venue_id'] . ">\n";
+		}
+	}else{
+    	echo "<http://www.cinemacontext.nl/id/B" . voorloopnullen($row['new_id']) . ">\n";
+	}
 
-    echo "<http://www.cinemacontext.nl/id/B" . voorloopnullen($row['new_id']) . ">\n";
-
-    echo "\trdfs:label \"" . addslashes($row['name']) . "\" ;\n";
-    echo "\tschema:location <http://www.cinemacontext.nl/place/" . $row['address_id'] . "> ;\n";
+    echo "\trdfs:label \"" . esc($row['name']) . "\" ;\n";
+    echo "\tschema:location <http://www.cinemacontext.nl/id/place/" . $row['address_id'] . "> ;\n";
     if(strlen($row['info'])){
-    	echo "\tschema:description \"" . addslashes($row['info']) . "\" ;\n";
+    	echo "\tschema:description \"" . esc($row['info']) . "\" ;\n";
 	}
 
 
@@ -47,7 +54,7 @@ while ($row = $result->fetch_assoc()) {
 		echo "\tschema:parentOrganization [\n";
 	    echo "\t\tschema:parentOrganization <http://www.cinemacontext.nl/id/R" . voorloopnullen($r1['new_id']) . "> ;\n";
 	    if(strlen($r1['info'])){
-	    	echo "\t\tschema:description \"" . addslashes($r1['info']) . "\" ;\n";
+	    	echo "\t\tschema:description \"" . esc($r1['info']) . "\" ;\n";
 		}
 	    if(strlen($period)){
 	    	echo str_replace("\t","\t\t",$period);

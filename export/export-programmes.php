@@ -18,10 +18,9 @@ $prefixes = "
 echo $prefixes;
 
 
-$sql = "select * 
-		from tblprogramme where programme_id = 'FV10007'";
-$sql = "select * 
-		from tblprogramme";
+$sql = "select p.*, v.venue_type
+		from tblprogramme as p
+		left join tblvenue as v on p.venue_id = v.venue_id";
 $result = $mysqli->query($sql);
 
 while ($row = $result->fetch_assoc()) {
@@ -59,6 +58,24 @@ while ($row = $result->fetch_assoc()) {
 
 	if($res3->num_rows){
     	echo "\tschema:location <http://www.cinemacontext.nl/id/B" . voorloopnullen($r3['new_id']) . "> ;\n";
+	}else{
+		if($row['venue_type']=="mobile theatre"){
+			echo "\tschema:location <http://www.cinemacontext.nl/stand/" . $row['venue_id'] . "> ;\n";
+		}else{
+			echo "\tschema:location <http://www.cinemacontext.nl/eventvenue/" . $row['venue_id'] . "> ;\n";
+		}
+
+		// also, programmes are joined to a company if it's a traveling cinema
+	 	$s6 = "select c.*, i.new_id
+			from tblJoinProgrammeCompany as x 
+			left join tblcompany as c on x.company_id = c.company_id
+			left join RPID as i on c.company_id = i.old_id
+			where x.programme_id = '" . $row['programme_id'] . "'";
+		$res6 = $mysqli->query($s6);
+		while($r6 = $res6->fetch_assoc()){
+			echo "\tschema:organizer <http://www.cinemacontext.nl/id/R" . voorloopnullen($r6['new_id']) . "> ;\n";
+		}
+
 	}
 
 
@@ -87,16 +104,34 @@ while ($row = $result->fetch_assoc()) {
 				echo "\t\tschema:position \"" . (int)$r4['programme_item_order'] . "\"^^xsd:int ;\n";
 			}
 			if(strlen($r4['var_title'])){
-				echo "\t\tschema:alternateName \"" . addslashes($r4['var_title']) . "\" ;\n";
+				echo "\t\tschema:alternateName \"" . esc($r4['var_title']) . "\" ;\n";
 			}
 			if(strlen($r4['language_code'])){
-				echo "\t\tschema:inLanguage \"" . addslashes($r4['language_code']) . "\" ;\n";
+				echo "\t\tschema:inLanguage \"" . esc($r4['language_code']) . "\" ;\n";
 			}
 			echo "\t\ta schema:ScreeningEvent ;\n";
 			echo "\t] ;\n";
 		}
     }
 
+    $s5 = "select * 
+		from tblJoinProgrammePublication 
+		where programme_id = '" . $row['programme_id'] . "'";
+	$res5 = $mysqli->query($s5);
+	$r5 = $res3->fetch_assoc();
+
+	if($res3->num_rows){
+    	echo "\tschema:citation [\n";
+    	echo "\t\trdf:value <http://www.cinemacontext.nl/id/publication/" . $r5['publication_id'] . "> ;\n";
+    	if(strlen($r5['info'])){
+    		echo "\t\tschema:description \"" . esc($r5['info']) . "\" ;\n";
+    		die;
+    	}
+    	echo "\t] ;\n";
+	}
+
+
+	
 
     echo  "\ta schema:Event .\n\n";
 

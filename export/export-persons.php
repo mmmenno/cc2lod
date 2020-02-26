@@ -27,16 +27,16 @@ while ($row = $result->fetch_assoc()) {
 
     echo "<http://www.cinemacontext.nl/id/P" . voorloopnullen($row['new_id']) . ">\n";
 
-    $surname = trim($row['suffix'] . " " . str_replace("\n"," ",$row['last_name']));
-    $literalName = trim($row['first_name'] . " " . $surname);
+    $surname = trim(esc($row['suffix']) . " " . esc($row['last_name']));
+    $literalName = trim(esc($row['first_name']) . " " . $surname);
 
     echo "\trdfs:label \"" . $literalName . "\" ;\n";
     echo "\tpnv:hasName [\n";
     echo "\t\tpnv:literalName \"" . $literalName . "\" ;\n";
-    echo "\t\tpnv:givenName \"" . $row['first_name'] . "\" ;\n";
+    echo "\t\tpnv:givenName \"" . esc($row['first_name']) . "\" ;\n";
     if(strlen($row['suffix'])){
-    	echo "\t\tpnv:surnamePrefix \"" . $row['suffix'] . "\" ;\n";
-    	echo "\t\tpnv:baseSurname \"" . str_replace("\n"," ",$row['last_name']) . "\" ;\n";
+    	echo "\t\tpnv:surnamePrefix \"" . esc($row['suffix']) . "\" ;\n";
+    	echo "\t\tpnv:baseSurname \"" . esc($row['last_name']) . "\" ;\n";
 	}
     echo "\t\tpnv:surname \"" . $surname . "\" ;\n";
     echo "\t] ;\n";
@@ -61,9 +61,35 @@ while ($row = $result->fetch_assoc()) {
 	    echo "\t\ta schema:OrganizationRole ;\n";
 	    echo "\t\tschema:roleName \"" . $r1['job_type'] . "\" ;\n";
 	    if(strlen($r1['info'])){
-	    	echo "\t\tschema:description \"" . addslashes($r1['info']) . "\" ;\n";
+	    	echo "\t\tschema:description \"" . esc($r1['info']) . "\" ;\n";
 		}
 	    echo "\t\tschema:worksFor <http://www.cinemacontext.nl/id/R" . voorloopnullen($r1['new_id']) . "> ;\n";
+	    if(strlen($period)){
+	    	echo str_replace("\t","\t\t",$period);
+	    }
+	    echo "\t] ;\n";
+
+	}
+
+	$s1 = "select x.*, i.new_id
+		from tblJoinVenuePerson as x 
+		left join tblvenue as v on x.venue_id = v.venue_id
+		left join BiosID as i on v.venue_id = i.old_id
+		where x.person_id = '" . $row['person_id'] . "'
+		order by x.s_order";
+	$res1 = $mysqli->query($s1);
+
+	while ($r1 = $res1->fetch_assoc()) {
+
+		$period = turtletime($r1['start_date'],$r1['end_date']);
+
+		echo "\tschema:worksFor [\n";
+	    echo "\t\ta schema:OrganizationRole ;\n";
+	    echo "\t\tschema:roleName \"" . $r1['job_type'] . "\" ;\n";
+	    if(strlen($r1['info'])){
+	    	echo "\t\tschema:description \"" . esc($r1['info']) . "\" ;\n";
+		}
+	    echo "\t\tschema:worksFor <http://www.cinemacontext.nl/id/B" . voorloopnullen($r1['new_id']) . "> ;\n";
 	    if(strlen($period)){
 	    	echo str_replace("\t","\t\t",$period);
 	    }

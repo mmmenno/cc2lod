@@ -26,9 +26,9 @@ while ($row = $result->fetch_assoc()) {
     
 
 
-    echo "<http://www.cinemacontext.nl/constructionevent/" . $row['address_id'] . "-" . $row['s_order'] . ">\n";
+    echo "<http://www.cinemacontext.nl/id/constructionevent/" . $row['address_id'] . "-" . $row['s_order'] . ">\n";
 
-    echo "\tsem:hasPlace <http://www.cinemacontext.nl/address/" . $row['address_id'] . "> ;\n";
+    echo "\tsem:hasPlace <http://www.cinemacontext.nl/id/place/" . $row['address_id'] . "> ;\n";
     echo "\tdc:type \"" . $row['construction_type'] . "\" ;\n";
 
     if(strlen($row['person_id'])){
@@ -41,9 +41,16 @@ while ($row = $result->fetch_assoc()) {
         echo "\t\ta sem:Role ;\n";
         echo "\t] ;\n";
     }
+    
+    if(strlen($row['wikidata_id_building'])){
+        echo "\tsem:hasActor [\n";
+        echo "\t\towl:sameAs <http://www.wikidata.org/entity/" . $row['wikidata_id_building'] . "> ;\n";
+        echo "\t\ta sem:Object ;\n";
+        echo "\t] ;\n";
+    }
 
     if(strlen($row['info'])){
-        echo "\tschema:description \"" . addslashes($row['info']) . "\" ;\n";
+        echo "\tschema:description \"" . esc($row['info']) . "\" ;\n";
     }
 
 

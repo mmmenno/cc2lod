@@ -23,11 +23,11 @@ while ($row = $result->fetch_assoc()) {
     
 
 
-    echo "<http://www.cinemacontext.nl/place/" . $row['address_id'] . ">\n";
+    echo "<http://www.cinemacontext.nl/id/place/" . $row['address_id'] . ">\n";
 
     if(strlen($row['geodata'])){
         $exploded = explode(",", $row['geodata']);
-        $wkt = "POINT(" . $exploded[1] . " $exploded[0])";
+        $wkt = "POINT(" . trim($exploded[1]) . " " . trim($exploded[0]) . ")";
         echo "\tgeo:hasGeometry [\n";
         echo "\t\tgeo:asWKT \"" . $wkt . "\" ;\n";
         echo "\t] ;\n";
@@ -35,19 +35,19 @@ while ($row = $result->fetch_assoc()) {
 
     if(strlen($row['street_name'])){
         echo "\tschema:address [\n";
-        echo "\t\tschema:streetAddress \"" . $row['street_name'] . "\" ;\n";
+        echo "\t\tschema:streetAddress \"" . esc($row['street_name']) . "\" ;\n";
         if(strlen($row['alt_street_name'])){
-            echo "\t\tschema:streetAddress \"" . $row['alt_street_name'] . "\" ;\n";
+            echo "\t\tschema:streetAddress \"" . esc($row['alt_street_name']) . "\" ;\n";
         }
-        echo "\t\tschema:addressLocality \"" . $row['city_name'] . "\" ;\n";
+        echo "\t\tschema:addressLocality \"" . esc($row['city_name']) . "\" ;\n";
         if(strlen($row['alt_city_name'])){
-            echo "\t\tschema:addressLocality \"" . $row['alt_city_name'] . "\" ;\n";
+            echo "\t\tschema:addressLocality \"" . esc($row['alt_city_name']) . "\" ;\n";
         }
         echo "\t] ;\n";
     }
 
     if(strlen($row['info'])){
-        echo "\tschema:description \"" . addslashes($row['info']) . "\" ;\n";
+        echo "\tschema:description \"" . esc($row['info']) . "\" ;\n";
     }
 
 

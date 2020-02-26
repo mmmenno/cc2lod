@@ -64,21 +64,24 @@ Theaters, or 'venues' are organizations existing on a specific location with a s
 	a schema:MovieTheater .
 ```
 
-Not all 'theaters' are just a `schema:MovieTheater`. Mobile cinemas are of the class `wd:Q6605486` (mobile cinema) as well:
+### mobile theaters
+
+Mobile theaters are like MovieTheaters, in the sense that you could go there to see a movie. And they are located at a schema:Place, at least at a specific moment in time. Mobile cinemas are of the class `wd:Q6605486` (mobile cinema) as well.
 
 ```
-<http://www.cinemacontext.nl/id/B>
+<http://www.cinemacontext.nl/stand/Venid1114084252705>
 	rdfs:label "Mobile Theatre" ;
-	schema:location <http://www.cinemacontext.nl/place/id1335708120533> ;
+	schema:location <http://www.cinemacontext.nl/id/place/id1114084252705> ;
 	a schema:MovieTheater, wd:Q6605486 .
 ``` 
+### eventvenues
 
-Sometimes a 'theater' is not a `schema:MovieTheater`, but a `schema:EventVenue` instead.
+A `schema:EventVenue` might be a hotel (like the Kurhaus), a concerthall or even a church.
 
 ```
-<http://www.cinemacontext.nl/id/B>
+<http://www.cinemacontext.nl/eventvenue/VenPerc978>
 	rdfs:label "Kurhaus (Scheveningen)" ;
-	schema:location <http://www.cinemacontext.nl/place/Perc978> ;
+	schema:location <http://www.cinemacontext.nl/id/place/Perc978> ;
 	a schema:EventVenue .
 ```
 
@@ -149,6 +152,31 @@ A 'programme' is a `schema:Event` consisting of one or more `schema:ScreeningEve
 		schema:workPresented <http://www.cinemacontext.nl/id/F009097> ;
 		schema:position "2"^^xsd:int ;
 		schema:alternateName "Bij de blonde Kathrien" ;
+		schema:inLanguage "NL" ;
+		a schema:ScreeningEvent ;
+	] ;
+	a schema:Event .
+```
+
+If the location where the schema:Event was held is a mobile theater, the event is likely to have a `schema:organizer`, presumably the mobile theater company.
+
+```
+<http://www.cinemacontext.nl/id/V078127>
+	schema:startDate "1911-06-16"^^xsd:date ;
+	rdfs:label "Mobile Theatre" ;
+	schema:location <http://www.cinemacontext.nl/stand/VenPerc1736> ;
+	schema:organizer <http://www.cinemacontext.nl/id/R001505> ;
+	schema:subEvent [
+		schema:workPresented <http://www.cinemacontext.nl/id/F031048> ;
+		schema:position "1"^^xsd:int ;
+		schema:alternateName "List van de Tooneelspeelster, De" ;
+		schema:inLanguage "NL" ;
+		a schema:ScreeningEvent ;
+	] ;
+	schema:subEvent [
+		schema:workPresented <http://www.cinemacontext.nl/id/F029623> ;
+		schema:position "2"^^xsd:int ;
+		schema:alternateName "Machineschrijfster, De" ;
 		schema:inLanguage "NL" ;
 		a schema:ScreeningEvent ;
 	] ;

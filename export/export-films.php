@@ -32,24 +32,27 @@ while ($row = $result->fetch_assoc()) {
 
     echo "<http://www.cinemacontext.nl/id/F" . voorloopnullen($r1['new_id']) . ">\n";
 
-    echo "\trdfs:label \"" . addslashes($row['title']) . "\" ;\n";
+    echo "\trdfs:label \"" . esc($row['title']) . "\" ;\n";
     if(strlen($row['info'])){
-    	echo "\tschema:description \"" . addslashes($row['info']) . "\" ;\n";
+    	echo "\tschema:description \"" . esc($row['info']) . "\" ;\n";
 	}
     if(strlen($row['film_year'])){
     	echo "\tschema:dateCreated \"" . $row['film_year'] . "\"^^xsd:gYear ;\n";
 	}
     if(strlen($row['imdb'])){
-    	echo "\towl:sameAs <https://www.imdb.com/title/tt" . trim($row['imdb']) . "> ;\n";
+    	echo "\tschema:sameAs <https://www.imdb.com/title/tt" . trim($row['imdb']) . "> ;\n";
 	}
     if(strlen($row['film_director'])){
-    	echo "\tdc:creator \"" . $row['film_director'] . "\" ;\n";
+    	echo "\tdc:creator \"" . esc($row['film_director']) . "\" ;\n";
 	}
     if(strlen($row['country'])){
     	echo "\tschema:countryOfOrigin \"" . $row['country'] . "\" ;\n";
 	}
     if(strlen($row['film_length'])){
-    	echo "\tdcterms:extent \"" . $row['film_length'] . "\" ;\n";
+        echo "\tdcterms:extent [\n";
+        echo "\t\tschema:value \"" . $row['film_length'] . "\"^^xsd:int ;\n";
+        echo "\t\tschema:unitCode \"MTR\" ;\n";
+        echo "\t] ;\n";
 	}
     if(strlen($row['film_gauge'])){
     	echo "\tdcterms:format \"" . $row['film_gauge'] . "\" ;\n";

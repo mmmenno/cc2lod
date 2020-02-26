@@ -26,9 +26,9 @@ while ($row = $result->fetch_assoc()) {
 
     echo "<http://www.cinemacontext.nl/id/R" . voorloopnullen($row['new_id']) . ">\n";
 
-    echo "\trdfs:label \"" . addslashes($row['name']) . "\" ;\n";
+    echo "\trdfs:label \"" . esc($row['name']) . "\" ;\n";
     if(strlen($row['info'])){
-    	echo "\tschema:description \"" . addslashes($row['info']) . "\" ;\n";
+    	echo "\tschema:description \"" . esc($row['info']) . "\" ;\n";
 	}
     if(strlen($row['date_established'])){
     	$founded = turtletime($row['date_established'],false);
@@ -41,10 +41,10 @@ while ($row = $result->fetch_assoc()) {
 
 
 	$s1 = "select x.*, i.new_id
-		from tblJoinVenueCompany as x 
+		from tblJoinCompanyCompany as x 
 		left join tblcompany as c on x.company_id = c.company_id
 		left join RPID as i on c.company_id = i.old_id
-		where x.venue_id = '" . $row['venue_id'] . "'
+		where x.subsidiary_id = '" . $row['company_id'] . "'
 		order by x.s_order";
 	$res1 = $mysqli->query($s1);
 
@@ -55,7 +55,7 @@ while ($row = $result->fetch_assoc()) {
 		echo "\tschema:parentOrganization [\n";
 	    echo "\t\tschema:parentOrganization <http://www.cinemacontext.nl/id/R" . voorloopnullen($r1['new_id']) . "> ;\n";
 	    if(strlen($r1['info'])){
-	    	echo "\t\tschema:description \"" . $r1['info'] . "\" ;\n";
+	    	echo "\t\tschema:description \"" . esc($r1['info']) . "\" ;\n";
 		}
 	    if(strlen($period)){
 	    	echo str_replace("\t","\t\t",$period);
