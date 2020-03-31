@@ -9,10 +9,24 @@ $prefixes = "
 @prefix sem: <http://semanticweb.cs.vu.nl/2009/11/sem/> . 
 @prefix owl: <http://www.w3.org/2002/07/owl#> . 
 @prefix pext: <http://www.ontotext.com/proton/protonext#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix dct: <http://purl.org/dc/terms/> .
 @prefix wd: <http://www.wikidata.org/entity/> . 
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> . 
 @prefix schema: <http://schema.org/> . \n\n";
 echo $prefixes;
+
+
+echo "# default graph\n";
+echo "{\n";
+echo "\t<https://data.create.humanities.uva.nl/id/cinemacontext/> a schema:Dataset ;\n";
+echo "\t\tschema:name \"Cinema Context\"@en . \n";
+echo "}\n\n";
+
+echo "# named graph\n";
+echo "<https://data.create.humanities.uva.nl/id/cinemacontext/> {\n\n";
+
+
 
 $sql = "select c.*, i.new_id 
 		from tblcompany as c 
@@ -87,12 +101,70 @@ while ($row = $result->fetch_assoc()) {
 
 	}
 
+	$s3 = "select *
+		from tblCompanyLegalForm
+		where company_id = '" . $row['company_id'] . "'
+		order by s_order";
+	$res3 = $mysqli->query($s3);
+
+	while ($r3 = $res3->fetch_assoc()) {
+
+		$period = turtletime($r3['start_date'],$r3['end_date']);
+
+		echo "\tdc:type [\n";
+	    echo "\t\trdfs:label \"" . esc($r3['legal_form']) . "\" ;\n";
+	    if(strlen($period)){
+	    	echo str_replace("\t","\t\t",$period);
+	    }
+	    echo "\t] ;\n";
+
+	}
+
+	$s4 = "select *
+		from tblCompanyOtherNames
+		where company_id = '" . $row['company_id'] . "'
+		order by s_order";
+	$res4 = $mysqli->query($s4);
+
+	while ($r4 = $res4->fetch_assoc()) {
+		echo "\tschema:alternateName \"" . esc($r4['other_name']) . "\" ;\n";
+	}
+
+
+	$s5 = "select *
+		from tblJoinCompanyArchive
+		where company_id = '" . $row['company_id'] . "'
+		order by s_order";
+	$res5 = $mysqli->query($s5);
+
+	while ($r5 = $res5->fetch_assoc()) {
+		echo "\tdct:source <http://www.cinemacontext.nl/archivalsource/" . $r5['archive_id'] . "> ; \n";
+	}
+
+
+	$s6 = "select * 
+		from tblJoinCompanyPublication 
+		where company_id = '" . $row['company_id'] . "'";
+	$res6 = $mysqli->query($s6);
+	$r6 = $res6->fetch_assoc();
+
+	if($res6->num_rows){
+    	echo "\tschema:citation [\n";
+    	echo "\t\trdf:value <http://www.cinemacontext.nl/publication/" . $r6['publication_id'] . "> ;\n";
+    	if(strlen($r6['info'])){
+    		echo "\t\tschema:description \"" . esc($r6['info']) . "\" ;\n";
+    	}
+    	echo "\t] ;\n";
+	}
+
+
+
 
     echo  "\ta schema:Organization .\n\n";
 
-	continue;
 	
 
 }
 
-
+// named graph end
+echo "}\n";

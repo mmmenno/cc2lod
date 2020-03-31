@@ -14,10 +14,20 @@ $prefixes = "
 
 echo $prefixes;
 
+echo "# default graph\n";
+echo "{\n";
+echo "\t<https://data.create.humanities.uva.nl/id/cinemacontext/> a schema:Dataset ;\n";
+echo "\t\tschema:name \"Cinema Context\"@en . \n";
+echo "}\n\n";
+
+
 $sql = "select * 
 		from tbladdress 
 		limit 3000000";
 $result = $mysqli->query($sql);
+
+echo "# named graph\n";
+echo "<https://data.create.humanities.uva.nl/id/cinemacontext/> {\n\n";
 
 while ($row = $result->fetch_assoc()) {
     
@@ -50,9 +60,25 @@ while ($row = $result->fetch_assoc()) {
         echo "\tschema:description \"" . esc($row['info']) . "\" ;\n";
     }
 
+    $s2 = "select * 
+        from tblJoinAddressPublication 
+        where address_id = '" . $row['address_id'] . "'";
+    $res2 = $mysqli->query($s2);
+    $r2 = $res2->fetch_assoc();
+
+    if($res2->num_rows){
+        echo "\tschema:citation [\n";
+        echo "\t\trdf:value <http://www.cinemacontext.nl/id/publication/" . $r2['publication_id'] . "> ;\n";
+        if(strlen($r2['info'])){
+            echo "\t\tschema:description \"" . esc($r2['info']) . "\" ;\n";
+        }
+        echo "\t] ;\n";
+    }
+
 
     echo  "\ta schema:Place .\n\n";
 
 }
 
-
+// named graph end
+echo "}\n";

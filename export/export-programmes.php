@@ -17,8 +17,17 @@ $prefixes = "
 @prefix schema: <http://schema.org/> . \n\n";
 echo $prefixes;
 
+echo "# default graph\n";
+echo "{\n";
+echo "\t<https://data.create.humanities.uva.nl/id/cinemacontext/> a schema:Dataset ;\n";
+echo "\t\tschema:name \"Cinema Context\"@en . \n";
+echo "}\n\n";
 
-$sql = "select p.*, v.venue_type
+echo "# named graph\n";
+echo "<https://data.create.humanities.uva.nl/id/cinemacontext/> {\n\n";
+
+
+$sql = "select p.programme_id,p.venue_id,p.programme_title,p.programme_info, v.venue_type
 		from tblprogramme as p
 		left join tblvenue as v on p.venue_id = v.venue_id";
 $result = $mysqli->query($sql);
@@ -39,15 +48,25 @@ while ($row = $result->fetch_assoc()) {
 		where programme_id = '" . $row['programme_id'] . "'";
 	$res2 = $mysqli->query($s2);
 	while ($r2 = $res2->fetch_assoc()){
-		echo "\tschema:startDate \"" . str_replace("-xx","",$r2['programme_date']) . "\"^^xsd:date ;\n";
+		$date = str_replace("-xx","",$r2['programme_date']);
+		if(strlen($date)==10){
+			$datetype = "date";
+		}elseif(strlen($date)==7){
+			$datetype = "gYearMonth";
+		}elseif(strlen($date)==4){
+			$datetype = "gYear";
+		}else{
+			$datetype = "string";
+		}
+		echo "\tschema:startDate \"" . $date . "\"^^xsd:" . $datetype . " ;\n";
 	}
 	
 	if(strlen($row['programme_title'])){
     	echo "\trdfs:label \"" . addslashes($row['programme_title']) . "\" ;\n";
 	}
 
-	if(strlen($row['info'])){
-    	echo "\tschema:description \"" . addslashes($row['info']) . "\" ;\n";
+	if(strlen($row['programme_info'])){
+    	echo "\tschema:description \"" . addslashes($row['programme_info']) . "\" ;\n";
 	}
     
     $s3 = "select new_id 
@@ -111,6 +130,14 @@ while ($row = $result->fetch_assoc()) {
 			}
 			echo "\t\ta schema:ScreeningEvent ;\n";
 			echo "\t] ;\n";
+		}elseif(strlen($r4['episode_id'])){
+			echo "\tschema:subEvent [\n";
+			echo "\t\tschema:workPresented <http://www.cinemacontext.nl/episode/" . $r4['episode_id'] . "> ;\n";
+			if(strlen($r4['programme_item_order'])){
+				echo "\t\tschema:position \"" . (int)$r4['programme_item_order'] . "\"^^xsd:int ;\n";
+			}
+			echo "\t\ta schema:ScreeningEvent ;\n";
+			echo "\t] ;\n";
 		}
     }
 
@@ -118,14 +145,12 @@ while ($row = $result->fetch_assoc()) {
 		from tblJoinProgrammePublication 
 		where programme_id = '" . $row['programme_id'] . "'";
 	$res5 = $mysqli->query($s5);
-	$r5 = $res3->fetch_assoc();
 
-	if($res3->num_rows){
+	while($r5 = $res5->fetch_assoc()){
     	echo "\tschema:citation [\n";
     	echo "\t\trdf:value <http://www.cinemacontext.nl/id/publication/" . $r5['publication_id'] . "> ;\n";
     	if(strlen($r5['info'])){
     		echo "\t\tschema:description \"" . esc($r5['info']) . "\" ;\n";
-    		die;
     	}
     	echo "\t] ;\n";
 	}
@@ -140,3 +165,5 @@ while ($row = $result->fetch_assoc()) {
 }
 
 
+// named graph end
+echo "}\n";

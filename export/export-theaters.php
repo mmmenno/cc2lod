@@ -10,14 +10,25 @@ $prefixes = "
 @prefix owl: <http://www.w3.org/2002/07/owl#> . 
 @prefix wd: <http://www.wikidata.org/entity/> . 
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> . 
+@prefix dbo: <http://dbpedia.org/ontology/> .
 @prefix schema: <http://schema.org/> . \n\n";
 echo $prefixes;
+
+echo "# default graph\n";
+echo "{\n";
+echo "\t<https://data.create.humanities.uva.nl/id/cinemacontext/> a schema:Dataset ;\n";
+echo "\t\tschema:name \"Cinema Context\"@en . \n";
+echo "}\n\n";
 
 $sql = "select v.*, i.new_id 
 		from tblvenue as v 
 		left join BiosID as i on v.venue_id = i.old_id
 		limit 300000000";
 $result = $mysqli->query($sql);
+
+
+echo "# named graph\n";
+echo "<https://data.create.humanities.uva.nl/id/cinemacontext/> {\n\n";
 
 while ($row = $result->fetch_assoc()) {
     
@@ -33,7 +44,7 @@ while ($row = $result->fetch_assoc()) {
 	}
 
     echo "\trdfs:label \"" . esc($row['name']) . "\" ;\n";
-    echo "\tschema:location <http://www.cinemacontext.nl/id/place/" . $row['address_id'] . "> ;\n";
+    echo "\tschema:location <http://www.cinemacontext.nl/place/" . $row['address_id'] . "> ;\n";
     if(strlen($row['info'])){
     	echo "\tschema:description \"" . esc($row['info']) . "\" ;\n";
 	}
@@ -63,6 +74,80 @@ while ($row = $result->fetch_assoc()) {
 
 	}
 
+	// period of activity, could be more than one
+	$s2 = "select *
+		from tblVenueActivePeriode 
+		where venue_id = '" . $row['venue_id'] . "'
+		order by s_order";
+	$res2 = $mysqli->query($s2);
+
+	while ($r2 = $res2->fetch_assoc()) {
+
+		$period = turtletime($r2['date_opened'],$r2['date_closed']);
+
+		echo "\tschema:temporalCoverage [\n";
+	    if(strlen($period)){
+	    	echo str_replace("\t","\t\t",$period);
+	    }
+	    echo "\t] ;\n";
+
+	}
+
+	// number of screens, changes over time
+	$s3 = "select *
+		from tblVenueScreen 
+		where venue_id = '" . $row['venue_id'] . "'
+		order by s_order";
+	$res3 = $mysqli->query($s3);
+
+	while ($r3 = $res3->fetch_assoc()) {
+
+		$start = turtletime($r3['date_opened']);
+
+		echo "\tschema:screenCount [\n";
+		echo "\t\tschema:screenCount \"" . $r3['number_of_screens'] . "\"^^xsd:integer ;\n";
+	    if(strlen($start)){
+	    	echo str_replace("\t","\t\t",$start);
+	    }
+	    echo "\t] ;\n";
+
+	}
+
+	//http://dbpedia.org/ontology/seatingCapacity
+
+	$s4 = "select *
+		from tblVenueSeats 
+		where venue_id = '" . $row['venue_id'] . "'
+		order by s_order";
+	$res4 = $mysqli->query($s4);
+
+	while ($r4 = $res4->fetch_assoc()) {
+
+		//$start = turtletime($r4['seats_year']);
+
+		echo "\tdbo:seatingCapacity [\n";
+		echo "\t\tdbo:seatingCapacity \"" . $r4['number_of_seats'] . "\"^^xsd:integer ;\n";
+		echo "\t\tsem:hasLatestBeginTimeStamp \"" . $r4['seats_year'] . "-12-31\"^^xsd:date ;\n";
+	    echo "\t] ;\n";
+
+	}
+
+	$s5 = "select * 
+		from tblJoinVenuePublication 
+		where venue_id = '" . $row['venue_id'] . "'";
+	$res5 = $mysqli->query($s5);
+	$r5 = $res5->fetch_assoc();
+
+	if($res5->num_rows){
+    	echo "\tschema:citation [\n";
+    	echo "\t\trdf:value <http://www.cinemacontext.nl/publication/" . $r5['publication_id'] . "> ;\n";
+    	if(strlen($r5['info'])){
+    		echo "\t\tschema:description \"" . esc($r5['info']) . "\" ;\n";
+    	}
+    	echo "\t] ;\n";
+	}
+
+
 
 
     if($row['venue_type']=="Cinema"){
@@ -73,5 +158,10 @@ while ($row = $result->fetch_assoc()) {
     	echo  "\ta schema:EventVenue .\n\n";
     }
 }
+
+
+// named graph end
+echo "}\n";
+
 
 

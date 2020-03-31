@@ -15,10 +15,20 @@ $prefixes = "
 
 echo $prefixes;
 
+echo "# default graph\n";
+echo "{\n";
+echo "\t<https://data.create.humanities.uva.nl/id/cinemacontext/> a schema:Dataset ;\n";
+echo "\t\tschema:name \"Cinema Context\"@en . \n";
+echo "}\n\n";
+
+echo "# named graph\n";
+echo "<https://data.create.humanities.uva.nl/id/cinemacontext/> {\n\n";
+
+
+
 $sql = "select h.*, i.new_id 
 		from tblAddressConstructionHistory as h
-        left join PersID as i on h.person_id = i.old_id
-		limit 300000";
+        left join PersID as i on h.person_id = i.old_id";
 $result = $mysqli->query($sql);
 
 
@@ -30,6 +40,14 @@ while ($row = $result->fetch_assoc()) {
 
     echo "\tsem:hasPlace <http://www.cinemacontext.nl/id/place/" . $row['address_id'] . "> ;\n";
     echo "\tdc:type \"" . $row['construction_type'] . "\" ;\n";
+
+    if(!preg_match("/^[0-9]{4}(-([0-9]{2}|xx))?(-([0-9]{2}|xx))?$/", $row['construction_year']) && strlen($row['construction_year'])){
+        $row['construction_year'] = substr($row['construction_year'],0,4);
+    }
+    $start = turtletime($row['construction_year'],$row['construction_year']);
+    if(strlen($start)){
+        echo $start;
+    }
 
     if(strlen($row['person_id'])){
         echo "\tsem:hasActor [\n";
@@ -58,4 +76,7 @@ while ($row = $result->fetch_assoc()) {
 
 }
 
+
+// named graph end
+echo "}\n";
 
