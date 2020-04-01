@@ -29,7 +29,7 @@ echo "<https://data.create.humanities.uva.nl/id/cinemacontext/> {\n\n";
 
 
 $sql = "select c.*, i.new_id 
-		from tblcompany as c 
+		from tblCompany as c 
 		left join RPID as i on c.company_id = i.old_id
 		limit 30000000";
 $result = $mysqli->query($sql);
@@ -138,7 +138,7 @@ while ($row = $result->fetch_assoc()) {
 	$res5 = $mysqli->query($s5);
 
 	while ($r5 = $res5->fetch_assoc()) {
-		echo "\tdct:source <http://www.cinemacontext.nl/archivalsource/" . $r5['archive_id'] . "> ; \n";
+		echo "\tdct:source <http://www.cinemacontext.nl/id/archivalsource/" . $r5['archive_id'] . "> ; \n";
 	}
 
 
@@ -150,7 +150,7 @@ while ($row = $result->fetch_assoc()) {
 
 	if($res6->num_rows){
     	echo "\tschema:citation [\n";
-    	echo "\t\trdf:value <http://www.cinemacontext.nl/publication/" . $r6['publication_id'] . "> ;\n";
+    	echo "\t\trdf:value <http://www.cinemacontext.nl/id/publication/" . $r6['publication_id'] . "> ;\n";
     	if(strlen($r6['info'])){
     		echo "\t\tschema:description \"" . esc($r6['info']) . "\" ;\n";
     	}

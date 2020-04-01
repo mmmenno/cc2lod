@@ -29,14 +29,14 @@ echo "<https://data.create.humanities.uva.nl/id/cinemacontext/> {\n\n";
 
 
 $sql = "select * 
-		from tblarchive";
+		from tblArchive";
 $result = $mysqli->query($sql);
 
 while ($row = $result->fetch_assoc()) {
     
 
 
-    echo "<http://www.cinemacontext.nl/archivalsource/" . $row['archive_id'] . ">\n";
+    echo "<http://www.cinemacontext.nl/id/archivalsource/" . $row['archive_id'] . ">\n";
 
     echo "\trdfs:label \"" . esc($row['inventory']) . "\" ;\n";
 

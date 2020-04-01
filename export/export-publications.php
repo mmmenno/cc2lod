@@ -15,6 +15,18 @@ $prefixes = "
 @prefix schema: <http://schema.org/> . \n\n";
 echo $prefixes;
 
+
+echo "# default graph\n";
+echo "{\n";
+echo "\t<https://data.create.humanities.uva.nl/id/cinemacontext/> a schema:Dataset ;\n";
+echo "\t\tschema:name \"Cinema Context\"@en . \n";
+echo "}\n\n";
+
+echo "# named graph\n";
+echo "<https://data.create.humanities.uva.nl/id/cinemacontext/> {\n\n";
+
+
+
 $sql = "select * 
 		from tblpublication
 		limit 3000000000";
@@ -64,4 +76,8 @@ while ($row = $result->fetch_assoc()) {
 
 }
 
+
+
+// named graph end
+echo "}\n";
 

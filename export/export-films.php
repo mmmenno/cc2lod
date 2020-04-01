@@ -3,17 +3,6 @@
 include("settings.php");
 include("functions.php");
 
-$text2AAT = array(
-    "animatie" => "http://vocab.getty.edu/aat/300410317",
-    "documentaire" => "http://vocab.getty.edu/aat/300375156",
-    "fictie" => "http://vocab.getty.edu/aat/300375156",
-    "journaal" => "http://vocab.getty.edu/aat/300263837",
-    "nonfictie" => "http://vocab.getty.edu/aat/300375156",
-    "reclame" => "http://vocab.getty.edu/aat/300193993",
-    "serie" => "http://vocab.getty.edu/aat/300266334",
-    "trailer" => "http://vocab.getty.edu/aat/300263866"
-);
-
 $prefixes = "
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> . 
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> . 
@@ -40,7 +29,7 @@ echo "<https://data.create.humanities.uva.nl/id/cinemacontext/> {\n\n";
 
 
 $sql = "select * 
-        from tblfilm limit 0";
+        from tblfilm";
 $result = $mysqli->query($sql);
 
 while ($row = $result->fetch_assoc()) {
@@ -53,7 +42,7 @@ while ($row = $result->fetch_assoc()) {
 
     echo "<http://www.cinemacontext.nl/id/F" . voorloopnullen($r1['new_id']) . ">\n";
 
-    echo "\trdfs:label \"" . esc($row['title']) . "\" ;\n";
+    echo "\tdc:title \"" . esc($row['title']) . "\" ;\n";
     if(strlen($row['info'])){
         echo "\tschema:description \"" . esc($row['info']) . "\" ;\n";
     }
@@ -79,29 +68,13 @@ while ($row = $result->fetch_assoc()) {
         echo "\tdcterms:format \"" . $row['film_gauge'] . "\" ;\n";
     }
 
-    // genre/category, could be more than one
-    $s2 = "select *
-        from tblFilmCategory 
-        where film_id = '" . $row['film_id'] . "'
-        order by s_order";
-    $res2 = $mysqli->query($s2);
-
-    while ($r2 = $res2->fetch_assoc()) {
-
-        echo "\tschema:genre [\n";
-        echo "\t\trdfs:label \"" . esc($r2['category']) . "\" ;\n";
-        if(isset($text2AAT[$r2['category']])){
-            echo "\t\tschema:genre <" . $text2AAT[$r2['category']] . "> ;\n";
-        }else{
-            echo "\t\tschema:genre <http://vocab.getty.edu/aat/300136900> ;\n";
-        }
-        echo "\t] ;\n";
+    if($row['fiction'] == "Y"){
+        echo "\tschema:genre \"fiction\" ;\n";
+    }elseif($row['fiction'] == "N"){
+        echo "\tschema:genre \"nonfiction\" ;\n";
     }
 
-
     echo  "\ta schema:Movie .\n\n";
-
-    
 
 }
 
@@ -114,9 +87,9 @@ $result = $mysqli->query($sql);
 
 while ($row = $result->fetch_assoc()) {
     
-    echo "<http://www.cinemacontext.nl/episode/" . $row['episode_id'] . ">\n";
+    echo "<http://www.cinemacontext.nl/id/episode/" . $row['episode_id'] . ">\n";
 
-    echo "\trdfs:label \"" . esc($row['title']) . "\" ;\n";
+    echo "\tdc:title \"" . esc($row['title']) . "\" ;\n";
     if(preg_match("/^[0-9]{4}$/", $row['episode_year'])){
         echo "\tschema:dateCreated \"" . $row['episode_year'] . "\"^^xsd:gYear ;\n";
     }

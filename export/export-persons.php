@@ -14,12 +14,23 @@ $prefixes = "
 
 echo $prefixes;
 
-$sql = "select p.*, i.new_id, f.first_name 
-		from tblperson as p 
+echo "# default graph\n";
+echo "{\n";
+echo "\t<https://data.create.humanities.uva.nl/id/cinemacontext/> a schema:Dataset ;\n";
+echo "\t\tschema:name \"Cinema Context\"@en . \n";
+echo "}\n\n";
+
+
+$sql = "select p.*, i.new_id
+		from tblPerson as p 
 		left join PersID as i on p.person_id = i.old_id
-		left join tblPersonFirstNames as f on p.person_id = f.person_id
 		limit 3000000";
 $result = $mysqli->query($sql);
+
+
+echo "# named graph\n";
+echo "<https://data.create.humanities.uva.nl/id/cinemacontext/> {\n\n";
+
 
 while ($row = $result->fetch_assoc()) {
     
@@ -31,9 +42,23 @@ while ($row = $result->fetch_assoc()) {
     $literalName = trim(esc($row['first_name']) . " " . $surname);
 
     echo "\trdfs:label \"" . $literalName . "\" ;\n";
+
+    // sex is sometimes indicated by prefix 'mevr.' in 'first_name'!
+    if(preg_match("/^mevr/i", $row['first_name'])){
+    	$row['first_name'] = trim(str_replace("mevr.","",$row['first_name']));
+    	$literalName = trim(str_replace("mevr.","",$literalName));
+    	echo "\tschema:gender schema:Female ;\n";
+    }
+
     echo "\tpnv:hasName [\n";
     echo "\t\tpnv:literalName \"" . $literalName . "\" ;\n";
-    echo "\t\tpnv:givenName \"" . esc($row['first_name']) . "\" ;\n";
+
+    if(preg_match("/[a-z]/",$row['first_name'])){
+    	echo "\t\tpnv:givenName \"" . esc($row['first_name']) . "\" ;\n";
+    }elseif(strlen($row['first_name'])){
+    	echo "\t\tpnv:initials \"" . esc($row['first_name']) . "\" ;\n";
+    }
+
     if(strlen($row['suffix'])){
     	echo "\t\tpnv:surnamePrefix \"" . esc($row['suffix']) . "\" ;\n";
     	echo "\t\tpnv:baseSurname \"" . esc($row['last_name']) . "\" ;\n";
@@ -101,6 +126,14 @@ while ($row = $result->fetch_assoc()) {
 
     if($row['date_birth']!="" && preg_match("/[0-9]{4}-[0-9]{2}-[0-9]{2}/",$row['date_birth'])){
         echo "\tschema:birthDate \"" . $row['date_birth'] . "\"^^xsd:date ;\n";
+    }elseif($row['date_birth']!="" && preg_match("/[0-9]{4}-([0-9]{2}|xx)-xx/",$row['date_birth'])){
+        echo "\tschema:birthDate \"" . substr($row['date_birth'],0,4) . "\"^^xsd:gYear ;\n";
+    }
+
+    if($row['date_deceased']!="" && preg_match("/[0-9]{4}-[0-9]{2}-[0-9]{2}/",$row['date_deceased'])){
+        echo "\tschema:deathDate \"" . $row['date_deceased'] . "\"^^xsd:date ;\n";
+    }elseif($row['date_deceased']!="" && preg_match("/[0-9]{4}-([0-9]{2}|xx)-xx/",$row['date_deceased'])){
+        echo "\tschema:deathDate \"" . substr($row['date_deceased'],0,4) . "\"^^xsd:gYear ;\n";
     }
 
     echo  "\ta schema:Person .\n\n";
@@ -108,3 +141,6 @@ while ($row = $result->fetch_assoc()) {
 }
 
 
+
+// named graph end
+echo "}\n";

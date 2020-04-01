@@ -79,9 +79,9 @@ while ($row = $result->fetch_assoc()) {
     	echo "\tschema:location <http://www.cinemacontext.nl/id/B" . voorloopnullen($r3['new_id']) . "> ;\n";
 	}else{
 		if($row['venue_type']=="mobile theatre"){
-			echo "\tschema:location <http://www.cinemacontext.nl/stand/" . $row['venue_id'] . "> ;\n";
+			echo "\tschema:location <http://www.cinemacontext.nl/id/stand/" . $row['venue_id'] . "> ;\n";
 		}else{
-			echo "\tschema:location <http://www.cinemacontext.nl/eventvenue/" . $row['venue_id'] . "> ;\n";
+			echo "\tschema:location <http://www.cinemacontext.nl/id/eventvenue/" . $row['venue_id'] . "> ;\n";
 		}
 
 		// also, programmes are joined to a company if it's a traveling cinema
@@ -132,7 +132,7 @@ while ($row = $result->fetch_assoc()) {
 			echo "\t] ;\n";
 		}elseif(strlen($r4['episode_id'])){
 			echo "\tschema:subEvent [\n";
-			echo "\t\tschema:workPresented <http://www.cinemacontext.nl/episode/" . $r4['episode_id'] . "> ;\n";
+			echo "\t\tschema:workPresented <http://www.cinemacontext.nl/id/episode/" . $r4['episode_id'] . "> ;\n";
 			if(strlen($r4['programme_item_order'])){
 				echo "\t\tschema:position \"" . (int)$r4['programme_item_order'] . "\"^^xsd:int ;\n";
 			}

@@ -35,16 +35,16 @@ while ($row = $result->fetch_assoc()) {
 
 	if(!strlen($row['new_id'])){
 		if($row['venue_type']=="mobile theatre"){
-			echo "<http://www.cinemacontext.nl/stand/" . $row['venue_id'] . ">\n";
+			echo "<http://www.cinemacontext.nl/id/stand/" . $row['venue_id'] . ">\n";
 		}else{
-			echo "<http://www.cinemacontext.nl/eventvenue/" . $row['venue_id'] . ">\n";
+			echo "<http://www.cinemacontext.nl/id/eventvenue/" . $row['venue_id'] . ">\n";
 		}
 	}else{
     	echo "<http://www.cinemacontext.nl/id/B" . voorloopnullen($row['new_id']) . ">\n";
 	}
 
     echo "\trdfs:label \"" . esc($row['name']) . "\" ;\n";
-    echo "\tschema:location <http://www.cinemacontext.nl/place/" . $row['address_id'] . "> ;\n";
+    echo "\tschema:location <http://www.cinemacontext.nl/id/place/" . $row['address_id'] . "> ;\n";
     if(strlen($row['info'])){
     	echo "\tschema:description \"" . esc($row['info']) . "\" ;\n";
 	}
@@ -140,7 +140,7 @@ while ($row = $result->fetch_assoc()) {
 
 	if($res5->num_rows){
     	echo "\tschema:citation [\n";
-    	echo "\t\trdf:value <http://www.cinemacontext.nl/publication/" . $r5['publication_id'] . "> ;\n";
+    	echo "\t\trdf:value <http://www.cinemacontext.nl/id/publication/" . $r5['publication_id'] . "> ;\n";
     	if(strlen($r5['info'])){
     		echo "\t\tschema:description \"" . esc($r5['info']) . "\" ;\n";
     	}
