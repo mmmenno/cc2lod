@@ -20,7 +20,8 @@ echo $prefixes;
 echo "# default graph\n";
 echo "{\n";
 echo "\t<https://data.create.humanities.uva.nl/id/cinemacontext/> a schema:Dataset ;\n";
-echo "\t\tschema:name \"Cinema Context\"@en . \n";
+echo "\t\tschema:name \"Cinema Context\"@en ; \n";
+echo "\t\tschema:description \"Data on Dutch Cinema: venues, people, companies, films, screenings, etc.\"@en . \n";
 echo "}\n\n";
 
 echo "# named graph\n";
@@ -62,11 +63,11 @@ while ($row = $result->fetch_assoc()) {
 	}
 	
 	if(strlen($row['programme_title'])){
-    	echo "\trdfs:label \"" . addslashes($row['programme_title']) . "\" ;\n";
+    	echo "\trdfs:label \"\"\"" . esc($row['programme_title']) . "\"\"\" ;\n";
 	}
 
 	if(strlen($row['programme_info'])){
-    	echo "\tschema:description \"" . addslashes($row['programme_info']) . "\" ;\n";
+    	echo "\tschema:description \"\"\"" . esc($row['programme_info']) . "\"\"\" ;\n";
 	}
     
     $s3 = "select new_id 
