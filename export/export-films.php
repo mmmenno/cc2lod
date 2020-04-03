@@ -20,7 +20,7 @@ echo $prefixes;
 echo "# default graph\n";
 echo "{\n";
 echo "\t<https://data.create.humanities.uva.nl/id/cinemacontext/> a schema:Dataset ;\n";
-echo "\t\tschema:name \"Cinema Context\"@en . \n";
+echo "\t\tschema:name \"Cinema Context\"@en ; \n";
 echo "\t\tschema:description \"Data on Dutch Cinema: venues, people, companies, films, screenings, etc.\"@en . \n";
 echo "}\n\n";
 
