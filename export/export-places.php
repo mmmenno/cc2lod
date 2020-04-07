@@ -54,6 +54,7 @@ while ($row = $result->fetch_assoc()) {
         if(strlen($row['alt_city_name'])){
             echo "\t\tschema:addressLocality \"" . esc($row['alt_city_name']) . "\" ;\n";
         }
+        echo "\t\ta schema:PostalAddress ;\n";
         echo "\t] ;\n";
     }
 
@@ -69,10 +70,11 @@ while ($row = $result->fetch_assoc()) {
 
     if($res2->num_rows){
         echo "\tschema:citation [\n";
-        echo "\t\trdf:value <http://www.cinemacontext.nl/id/publication/" . $r2['publication_id'] . "> ;\n";
+        echo "\t\tschema:citation <http://www.cinemacontext.nl/id/publication/" . $r2['publication_id'] . "> ;\n";
         if(strlen($r2['info'])){
             echo "\t\tschema:description \"" . esc($r2['info']) . "\" ;\n";
         }
+        echo "\t\ta schema:Role ; \n";
         echo "\t] ;\n";
     }
 

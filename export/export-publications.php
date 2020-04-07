@@ -43,7 +43,7 @@ while ($row = $result->fetch_assoc()) {
     	echo "\tschema:headline \"\"\"" . esc($row['title']) . "\"\"\" ;\n";
 	}
     if(strlen($row['book_journal_title'])){
-    	echo "\tdc:title \"\"\"" . esc($row['book_journal_title']) . "\"\"\" ;\n";
+    	echo "\tschema:name \"\"\"" . esc($row['book_journal_title']) . "\"\"\" ;\n";
 	}
     if(strlen($row['publication_date'])){
     	echo "\tschema:datePublished \"" . substr($row['publication_date'],0,4) . "\"^^xsd:gYear ;\n";
@@ -55,7 +55,7 @@ while ($row = $result->fetch_assoc()) {
     	echo "\tschema:issueNumber \"\"\"" . $row['publication_number'] . "\"\"\" ;\n";
 	}
     if(strlen($row['author'])){
-    	echo "\tdc:creator \"\"\"" . $row['author'] . "\"\"\" ;\n";
+    	echo "\tschema:creator \"\"\"" . $row['author'] . "\"\"\" ;\n";
 	}
     if(strlen($row['editor'])){
     	echo "\tschema:editor \"\"\"" . $row['editor'] . "\"\"\" ;\n";

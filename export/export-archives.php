@@ -39,7 +39,7 @@ while ($row = $result->fetch_assoc()) {
 
     echo "<http://www.cinemacontext.nl/id/archivalsource/" . $row['archive_id'] . ">\n";
 
-    echo "\trdfs:label \"" . esc($row['inventory']) . "\" ;\n";
+    echo "\tschema:name \"" . esc($row['inventory']) . "\" ;\n";
 
     $description = array();
     if(strlen($row['description'])){
@@ -53,7 +53,7 @@ while ($row = $result->fetch_assoc()) {
 	}
     if(strlen($row['institution'])){
     	echo "\tschema:holdingArchive [\n";
-    	echo "\t\trdfs:label \"" . esc($row['institution']) . "\" ;\n";
+    	echo "\t\tschema:name \"" . esc($row['institution']) . "\" ;\n";
     	echo "\t\ta schema:ArchiveOrganization ;\n";
     	echo "\t] ;\n";
 	}

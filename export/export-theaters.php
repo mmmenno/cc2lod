@@ -44,7 +44,7 @@ while ($row = $result->fetch_assoc()) {
     	echo "<http://www.cinemacontext.nl/id/B" . voorloopnullen($row['new_id']) . ">\n";
 	}
 
-    echo "\trdfs:label \"" . esc($row['name']) . "\" ;\n";
+    echo "\tschema:name \"" . esc($row['name']) . "\" ;\n";
     echo "\tschema:location <http://www.cinemacontext.nl/id/place/" . $row['address_id'] . "> ;\n";
     if(strlen($row['info'])){
     	echo "\tschema:description \"" . esc($row['info']) . "\" ;\n";
@@ -71,6 +71,7 @@ while ($row = $result->fetch_assoc()) {
 	    if(strlen($period)){
 	    	echo str_replace("\t","\t\t",$period);
 	    }
+        echo "\t\ta schema:Role ; \n";
 	    echo "\t] ;\n";
 
 	}
@@ -106,7 +107,7 @@ while ($row = $result->fetch_assoc()) {
 		$start = turtletime($r3['date_opened']);
 
 		echo "\tschema:screenCount [\n";
-		echo "\t\tschema:screenCount \"" . $r3['number_of_screens'] . "\"^^xsd:integer ;\n";
+		echo "\t\tschema:screenCount \"" . $r3['number_of_screens'] . "\"^^xsd:int ;\n";
 	    if(strlen($start)){
 	    	echo str_replace("\t","\t\t",$start);
 	    }
@@ -127,8 +128,9 @@ while ($row = $result->fetch_assoc()) {
 		//$start = turtletime($r4['seats_year']);
 
 		echo "\tdbo:seatingCapacity [\n";
-		echo "\t\tdbo:seatingCapacity \"" . $r4['number_of_seats'] . "\"^^xsd:integer ;\n";
+		echo "\t\tdbo:seatingCapacity \"" . $r4['number_of_seats'] . "\"^^xsd:int ;\n";
 		echo "\t\tsem:hasLatestBeginTimeStamp \"" . $r4['seats_year'] . "-12-31\"^^xsd:date ;\n";
+        echo "\t\ta schema:Role ; \n";
 	    echo "\t] ;\n";
 
 	}
@@ -141,10 +143,11 @@ while ($row = $result->fetch_assoc()) {
 
 	if($res5->num_rows){
     	echo "\tschema:citation [\n";
-    	echo "\t\trdf:value <http://www.cinemacontext.nl/id/publication/" . $r5['publication_id'] . "> ;\n";
+    	echo "\t\tschema:citation <http://www.cinemacontext.nl/id/publication/" . $r5['publication_id'] . "> ;\n";
     	if(strlen($r5['info'])){
     		echo "\t\tschema:description \"" . esc($r5['info']) . "\" ;\n";
     	}
+        echo "\t\ta schema:Role ; \n";
     	echo "\t] ;\n";
 	}
 
@@ -154,7 +157,8 @@ while ($row = $result->fetch_assoc()) {
     if($row['venue_type']=="Cinema"){
     	echo  "\ta schema:MovieTheater .\n\n";
     }elseif($row['venue_type']=="mobile theatre"){
-    	echo  "\ta schema:MovieTheater, wd:Q6605486 .\n\n";
+    	echo  "\tschema:additionalType wd:Q6605486 ;\n";
+    	echo  "\ta schema:MovieTheater .\n\n";
     }else{
     	echo  "\ta schema:EventVenue .\n\n";
     }

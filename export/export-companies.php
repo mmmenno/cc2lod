@@ -41,7 +41,7 @@ while ($row = $result->fetch_assoc()) {
 
     echo "<http://www.cinemacontext.nl/id/R" . voorloopnullen($row['new_id']) . ">\n";
 
-    echo "\trdfs:label \"" . esc($row['name']) . "\" ;\n";
+    echo "\tschema:name \"" . esc($row['name']) . "\" ;\n";
     if(strlen($row['info'])){
     	echo "\tschema:description \"" . esc($row['info']) . "\" ;\n";
 	}
@@ -75,7 +75,7 @@ while ($row = $result->fetch_assoc()) {
 	    if(strlen($period)){
 	    	echo str_replace("\t","\t\t",$period);
 	    }
-	    echo "\t\ta \"schema:Role\" ;\n";
+	    echo "\t\ta schema:Role ;\n";
 	    echo "\t] ;\n";
 
 	}
@@ -91,7 +91,7 @@ while ($row = $result->fetch_assoc()) {
 		$period = turtletime($r2['start_date'],$r2['end_date']);
 
 		echo "\tpext:activeInSector [\n";
-	    echo "\t\trdfs:label \"" . $r2['branch_name'] . "\" ;\n";
+	    echo "\t\tschema:name \"" . $r2['branch_name'] . "\" ;\n";
 	    if(strlen($r2['info'])){
 	    	echo "\t\tschema:description \"" . $r2['info'] . "\" ;\n";
 		}
@@ -114,7 +114,7 @@ while ($row = $result->fetch_assoc()) {
 		$period = turtletime($r3['start_date'],$r3['end_date']);
 
 		echo "\tdc:type [\n";
-	    echo "\t\trdfs:label \"" . esc($r3['legal_form']) . "\" ;\n";
+	    echo "\t\tschema:name \"" . esc($r3['legal_form']) . "\" ;\n";
 	    if(strlen($period)){
 	    	echo str_replace("\t","\t\t",$period);
 	    }
@@ -152,10 +152,11 @@ while ($row = $result->fetch_assoc()) {
 
 	if($res6->num_rows){
     	echo "\tschema:citation [\n";
-    	echo "\t\trdf:value <http://www.cinemacontext.nl/id/publication/" . $r6['publication_id'] . "> ;\n";
+    	echo "\t\tschema:citation <http://www.cinemacontext.nl/id/publication/" . $r6['publication_id'] . "> ;\n";
     	if(strlen($r6['info'])){
     		echo "\t\tschema:description \"" . esc($r6['info']) . "\" ;\n";
     	}
+    	echo "\t\ta schema:Role ;\n";
     	echo "\t] ;\n";
 	}
 

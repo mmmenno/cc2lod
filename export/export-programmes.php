@@ -63,7 +63,7 @@ while ($row = $result->fetch_assoc()) {
 	}
 	
 	if(strlen($row['programme_title'])){
-    	echo "\trdfs:label \"\"\"" . esc($row['programme_title']) . "\"\"\" ;\n";
+    	echo "\tschema:name \"\"\"" . esc($row['programme_title']) . "\"\"\" ;\n";
 	}
 
 	if(strlen($row['programme_info'])){
@@ -149,10 +149,11 @@ while ($row = $result->fetch_assoc()) {
 
 	while($r5 = $res5->fetch_assoc()){
     	echo "\tschema:citation [\n";
-    	echo "\t\trdf:value <http://www.cinemacontext.nl/id/publication/" . $r5['publication_id'] . "> ;\n";
+    	echo "\t\tschema:citation <http://www.cinemacontext.nl/id/publication/" . $r5['publication_id'] . "> ;\n";
     	if(strlen($r5['info'])){
     		echo "\t\tschema:description \"" . esc($r5['info']) . "\" ;\n";
     	}
+    	echo "\t\ta schema:Role ;\n";
     	echo "\t] ;\n";
 	}
 

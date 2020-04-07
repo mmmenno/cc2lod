@@ -54,7 +54,7 @@ while ($row = $result->fetch_assoc()) {
         echo "\tsem:hasActor [\n";
         echo "\t\trdf:value <http://www.cinemacontext.nl/id/P" . voorloopnullen($row['new_id']) . "> ;\n";
         echo "\t\tsem:roleType [\n";
-        echo "\t\t\trdfs:label \"architect\" ; \n";
+        echo "\t\t\tschema:name \"architect\" ; \n";
         echo "\t\t\ta sem:RoleType ;\n";
         echo "\t\t] ;\n";
         echo "\t\ta sem:Role ;\n";

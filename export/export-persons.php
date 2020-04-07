@@ -42,7 +42,7 @@ while ($row = $result->fetch_assoc()) {
     $surname = trim(esc($row['suffix']) . " " . esc($row['last_name']));
     $literalName = trim(esc($row['first_name']) . " " . $surname);
 
-    echo "\trdfs:label \"" . $literalName . "\" ;\n";
+    echo "\tschema:name \"" . $literalName . "\" ;\n";
 
     // sex is sometimes indicated by prefix 'mevr.' in 'first_name'!
     if(preg_match("/^mevr/i", $row['first_name'])){

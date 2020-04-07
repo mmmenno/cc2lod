@@ -43,7 +43,7 @@ while ($row = $result->fetch_assoc()) {
 
     echo "<http://www.cinemacontext.nl/id/F" . voorloopnullen($r1['new_id']) . ">\n";
 
-    echo "\tdc:title \"" . esc($row['title']) . "\" ;\n";
+    echo "\tschema:name \"" . esc($row['title']) . "\" ;\n";
     if(strlen($row['info'])){
         echo "\tschema:description \"" . esc($row['info']) . "\" ;\n";
     }
@@ -54,7 +54,7 @@ while ($row = $result->fetch_assoc()) {
         echo "\tschema:sameAs <https://www.imdb.com/title/tt" . trim($row['imdb']) . "> ;\n";
     }
     if(strlen($row['film_director'])){
-        echo "\tdc:creator \"" . esc($row['film_director']) . "\" ;\n";
+        echo "\tschema:creator \"" . esc($row['film_director']) . "\" ;\n";
     }
     if(strlen($row['country'])){
         echo "\tschema:countryOfOrigin \"" . $row['country'] . "\" ;\n";
@@ -63,6 +63,7 @@ while ($row = $result->fetch_assoc()) {
         echo "\tdcterms:extent [\n";
         echo "\t\tschema:value \"" . $row['film_length'] . "\"^^xsd:int ;\n";
         echo "\t\tschema:unitCode \"MTR\" ;\n";
+        echo "\t\ta schema:PropertyValue ;\n";
         echo "\t] ;\n";
     }
     if(strlen($row['film_gauge'])){
@@ -90,7 +91,7 @@ while ($row = $result->fetch_assoc()) {
     
     echo "<http://www.cinemacontext.nl/id/episode/" . $row['episode_id'] . ">\n";
 
-    echo "\tdc:title \"" . esc($row['title']) . "\" ;\n";
+    echo "\tschema:name \"" . esc($row['title']) . "\" ;\n";
     if(preg_match("/^[0-9]{4}$/", $row['episode_year'])){
         echo "\tschema:dateCreated \"" . $row['episode_year'] . "\"^^xsd:gYear ;\n";
     }
@@ -98,6 +99,7 @@ while ($row = $result->fetch_assoc()) {
         echo "\tdcterms:extent [\n";
         echo "\t\tschema:value \"" . $row['film_length'] . "\"^^xsd:int ;\n";
         echo "\t\tschema:unitCode \"MTR\" ;\n";
+        echo "\t\ta schema:PropertyValue ;\n";
         echo "\t] ;\n";
     }
     if(strlen($row['film_gauge'])){
