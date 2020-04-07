@@ -8,7 +8,7 @@ The resulting turtle looks like this:
 
 ```
 <http://www.cinemacontext.nl/id/R000017>
-	rdfs:label "Eindhovensche Bioscope Maatschappij NV" ;
+	schema:name "Eindhovensche Bioscope Maatschappij NV" ;
 	sem:hasEarliestBeginTimeStamp "1913-07-01"^^xsd:date ;
 	sem:hasLatestBeginTimeStamp "1913-07-31"^^xsd:date ;
 	schema:parentOrganization [
@@ -16,14 +16,18 @@ The resulting turtle looks like this:
 		schema:description "Eindhovense Bioscope Mij. neemt in 1939 de aandelen van D. Hamburger over." ;
 		sem:hasEarliestBeginTimeStamp "1929-01-01"^^xsd:date ;
 		sem:hasLatestBeginTimeStamp "1929-12-31"^^xsd:date ;
-		a "schema:Role" ;
+		a schema:Role ;
 	] ;
 	pext:activeInSector [
-		rdfs:label "bioscoopexploitatie" ;
+		schema:name "bioscoopexploitatie" ;
 		a pext:IndustrySector ;
 	] ;
 	dc:type [
-		rdfs:label "N.V." ;
+		schema:name "N.V." ;
+	] ;
+	schema:citation [
+		schema:citation <http://www.cinemacontext.nl/id/publication/id1151255550914> ;
+		a schema:Role ;
 	] ;
 	a schema:Organization .
 ```
@@ -34,7 +38,7 @@ A person might work for a company.
 
 ```
 <http://www.cinemacontext.nl/id/P000015>
-	rdfs:label "mevr. W. Gunneman" ;
+	schema:name "mevr. W. Gunneman" ;
 	schema:gender schema:Female ;
 	pnv:hasName [
 		pnv:literalName "W. Gunneman" ;
@@ -58,7 +62,7 @@ Theaters, or 'venues' are organizations existing on a specific location with a s
 
 ```
 <http://www.cinemacontext.nl/id/B000006>
-	rdfs:label "Cineac Damrak" ;
+	schema:name "Cineac Damrak" ;
 	schema:location <http://www.cinemacontext.nl/id/place/Perc8> ;
 	schema:parentOrganization [
 		schema:parentOrganization <http://www.cinemacontext.nl/id/R000007> ;
@@ -66,6 +70,7 @@ Theaters, or 'venues' are organizations existing on a specific location with a s
 		sem:hasLatestBeginTimeStamp "1938-12-31"^^xsd:date ;
 		sem:hasEarliestEndTimeStamp "1983-01-01"^^xsd:date ;
 		sem:hasLatestEndTimeStamp "1983-12-31"^^xsd:date ;
+		a schema:Role ; 
 	] ;
 	schema:temporalCoverage [
 		sem:hasEarliestBeginTimeStamp "1938-03-17"^^xsd:date ;
@@ -74,31 +79,37 @@ Theaters, or 'venues' are organizations existing on a specific location with a s
 		sem:hasLatestEndTimeStamp "1983-07-06"^^xsd:date ;
 	] ;
 	schema:screenCount [
-		schema:screenCount "2"^^xsd:integer ;
+		schema:screenCount "2"^^xsd:int ;
 		sem:hasEarliestBeginTimeStamp "1975-01-01"^^xsd:date ;
 		sem:hasLatestBeginTimeStamp "1975-01-31"^^xsd:date ;
 	] ;
 	schema:screenCount [
-		schema:screenCount "1"^^xsd:integer ;
+		schema:screenCount "1"^^xsd:int ;
 		sem:hasEarliestBeginTimeStamp "1938-01-01"^^xsd:date ;
 		sem:hasLatestBeginTimeStamp "1938-12-31"^^xsd:date ;
 	] ;
 	dbo:seatingCapacity [
-		dbo:seatingCapacity "750"^^xsd:integer ;
+		dbo:seatingCapacity "750"^^xsd:int ;
 		sem:hasLatestBeginTimeStamp "1938-12-31"^^xsd:date ;
+		a schema:Role ; 
+	] ;
+	schema:citation [
+		schema:citation <http://www.cinemacontext.nl/id/publication/Pub165> ;
+		a schema:Role ; 
 	] ;
 	a schema:MovieTheater .
 ```
 
 ### mobile theaters
 
-Mobile theaters are like MovieTheaters, in the sense that you could go there to see a movie. And they are located at a schema:Place, at least at a specific moment in time. Mobile cinemas are of the class `wd:Q6605486` (mobile cinema) as well.
+Mobile theaters are like MovieTheaters, in the sense that you could go there to see a movie. And they are located at a schema:Place, at least at a specific moment in time. Mobile cinemas have an additionalType of `wd:Q6605486` (mobile cinema) as well.
 
 ```
 <http://www.cinemacontext.nl/id/stand/Venid1114084252705>
-	rdfs:label "Mobile Theatre" ;
+	schema:name "Mobile Theatre" ;
 	schema:location <http://www.cinemacontext.nl/id/place/id1114084252705> ;
-	a schema:MovieTheater, wd:Q6605486 .
+	schema:additionalType wd:Q6605486 ;
+	a schema:MovieTheater .
 ``` 
 ### eventvenues
 
@@ -106,7 +117,7 @@ A `schema:EventVenue` might be a hotel (like the Kurhaus), a concerthall or even
 
 ```
 <http://www.cinemacontext.nl/id/eventvenue/VenPerc978>
-	rdfs:label "Kurhaus (Scheveningen)" ;
+	schema:name "Kurhaus (Scheveningen)" ;
 	schema:location <http://www.cinemacontext.nl/id/place/Perc978> ;
 	a schema:EventVenue .
 ```
@@ -124,6 +135,7 @@ A 'place' is just that: a point on the map. Sometimes a place might have a 1:1 r
 	schema:address [
 		schema:streetAddress "Plantage Middenlaan 24" ;
 		schema:addressLocality "Amsterdam" ;
+		a schema:PostalAddress ;
 	] ;
 	schema:description "Hollandsche Schouwburg" ;
 	a schema:Place .
@@ -144,7 +156,7 @@ Construction events include the dc:types 'Nieuwbouw' and 'Verbouwing'. Construct
 	sem:hasActor [
 		rdf:value <http://www.cinemacontext.nl/id/P002395> ;
 		sem:roleType [
-			rdfs:label "architect" ; 
+			schema:name "architect" ; 
 			a sem:RoleType ;
 		] ;
 		a sem:Role ;
@@ -237,7 +249,7 @@ If the location where the schema:Event was held is a mobile theater, the event i
 
 ```
 <http://www.cinemacontext.nl/id/F002877>
-	dc:title "Daydreams (1922)" ;
+	schema:name "Daydreams (1922)" ;
 	schema:description "Buster Keaton" ;
 	schema:dateCreated "1922"^^xsd:gYear ;
 	schema:sameAs <https://www.imdb.com/title/tt0013055> ;
@@ -245,6 +257,7 @@ If the location where the schema:Event was held is a mobile theater, the event i
 	dcterms:extent [
 		schema:value "800"^^xsd:int ;
 		schema:unitCode "MTR" ;
+		a schema:PropertyValue ;
 	] ;
 	dcterms:format "35mm" ;
 	schema:genre "fiction" ;
