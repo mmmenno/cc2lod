@@ -3,16 +3,27 @@
 include("settings.php");
 include("functions.php");
 
+$legalforms = array(
+	"B.V." => "54M6",
+	"C.V." => "CODH",
+	"Firma" => "54M6",
+	"N.V." => "B5PM",
+	"Stichting" => "V44D",
+	"Vereniging" => "33MN"
+);
+
 $prefixes = "
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> . 
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> . 
 @prefix sem: <http://semanticweb.cs.vu.nl/2009/11/sem/> . 
 @prefix owl: <http://www.w3.org/2002/07/owl#> . 
 @prefix pext: <http://www.ontotext.com/proton/protonext#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix wd: <http://www.wikidata.org/entity/> . 
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> . 
+@prefix gleio: <http://lei.info/gleio/> .
 @prefix schema: <http://schema.org/> . \n\n";
 echo $prefixes;
 
@@ -21,6 +32,7 @@ echo "# default graph\n";
 echo "{\n";
 echo "\t<https://data.create.humanities.uva.nl/id/cinemacontext/> a schema:Dataset ;\n";
 echo "\t\tschema:name \"Cinema Context\"@en ; \n";
+echo "\t\tschema:license <https://creativecommons.org/licenses/by-sa/4.0/> ;\n";
 echo "\t\tschema:description \"Data on Dutch Cinema: venues, people, companies, films, screenings, etc.\"@en . \n";
 echo "}\n\n";
 
@@ -113,13 +125,16 @@ while ($row = $result->fetch_assoc()) {
 
 		$period = turtletime($r3['start_date'],$r3['end_date']);
 
-		echo "\tdc:type [\n";
-	    echo "\t\tschema:name \"" . esc($r3['legal_form']) . "\" ;\n";
-	    if(strlen($period)){
+		echo "\tgleio:hasLegalForm [\n";
+		echo "\t\ta gleio:LegalForm ;\n";
+		echo "\t\tskos:altLabel \"" . esc($r3['legal_form']) . "\" ;\n";
+		if(isset($legalforms[$r3['legal_form']])){
+			echo "\t\tgleio:hasEntityLegalFormCode \"" . $legalforms[$r3['legal_form']] . "\" ;\n";
+		}
+		if(strlen($period)){
 	    	echo str_replace("\t","\t\t",$period);
 	    }
-	    echo "\t] ;\n";
-
+		echo "\t] ;\n";
 	}
 
 	$s4 = "select *

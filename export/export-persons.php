@@ -65,6 +65,7 @@ while ($row = $result->fetch_assoc()) {
     	echo "\t\tpnv:baseSurname \"" . esc($row['last_name']) . "\" ;\n";
 	}
     echo "\t\tpnv:surname \"" . $surname . "\" ;\n";
+    echo "\t\ta pnv:PersonName ;\n";
     echo "\t] ;\n";
 
 

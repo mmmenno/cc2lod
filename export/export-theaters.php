@@ -111,6 +111,7 @@ while ($row = $result->fetch_assoc()) {
 	    if(strlen($start)){
 	    	echo str_replace("\t","\t\t",$start);
 	    }
+	    echo "\t\ta schema:Role ;\n";
 	    echo "\t] ;\n";
 
 	}
