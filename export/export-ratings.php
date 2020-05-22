@@ -43,8 +43,8 @@ while ($row = $result->fetch_assoc()) {
     if(strlen($row['censorship_date'])){
         echo "\tschema:dateCreated \"" . $row['censorship_date'] . "\"^^xsd:date ;\n";
     }
+    
     if(strlen($row['company_id'])){
-
         $s2 = "select new_id 
                 from RPID 
                 where old_id = '" . $row['company_id'] . "'";
@@ -56,11 +56,31 @@ while ($row = $result->fetch_assoc()) {
         echo "\tschema:contentRating \"" . esc($row['rating']) . "\" ;\n";
     }
 
+    if(strlen($row['recommendation']=="Y")){
+        echo "\tschema:ratingValue \"recommended\" ;\n";
+    }elseif(strlen($row['recommendation']=="N")){
+        echo "\tschema:ratingValue \"not recommended\" ;\n";
+    }
+
     if(strlen($row['comment_by_censor'])){
         echo "\tschema:ratingExplanation \"" . esc($row['comment_by_censor']) . "\" ;\n";
     }
 
-    echo  "\ta schema:Rating .\n\n";
+    $s3 = "select * FROM tblCensorshipTitle 
+            where censorship_id = '" . $row['censorship_id'] . "'";
+    $res3 = $mysqli->query($s3);
+    while($r3 = $res3->fetch_assoc()){
+        echo "\tschema:about [\n";
+        echo "\t\ta schema:Role ;\n";
+        echo "\t\tschema:name \"" . esc($r3['title']) . "\" ;\n"; 
+        if($r3['censorshiptitle_note']){
+            echo "\t\tschema:description \"" . esc($r3['censorshiptitle_note']) . "\" ;\n"; 
+        }
+        echo "\t\tschema:about <http://www.cinemacontext.nl/id/F" . voorloopnullen($r1['new_id']) . "> ;\n";
+        echo "\t] ;\n";
+    }
+
+    echo  "\ta schema:Rating, schema:CreativeWork .\n\n";
 
 }
 
