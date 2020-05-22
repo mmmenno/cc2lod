@@ -53,7 +53,7 @@ while ($row = $result->fetch_assoc()) {
         echo "\tschema:author <http://www.cinemacontext.nl/id/R" . voorloopnullen($r2['new_id']) . "> ;\n";
     }
     if(strlen($row['rating'])){
-        echo "\tschema:contentRating \"" . esc($row['rating']) . "\" ;\n";
+        echo "\tschema:text \"" . esc($row['rating']) . "\" ;\n";
     }
 
     if(strlen($row['recommendation']=="Y")){
