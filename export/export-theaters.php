@@ -22,7 +22,7 @@ echo "\t\tschema:description \"Data on Dutch Cinema: venues, people, companies, 
 echo "}\n\n";
 
 $sql = "select v.*, i.new_id 
-		from tblvenue as v 
+		from tblVenue as v 
 		left join BiosID as i on v.venue_id = i.old_id
 		limit 300000000";
 $result = $mysqli->query($sql);
@@ -53,7 +53,7 @@ while ($row = $result->fetch_assoc()) {
 
 	$s1 = "select x.*, i.new_id
 		from tblJoinVenueCompany as x 
-		left join tblcompany as c on x.company_id = c.company_id
+		left join tblCompany as c on x.company_id = c.company_id
 		left join RPID as i on c.company_id = i.old_id
 		where x.venue_id = '" . $row['venue_id'] . "'
 		order by x.s_order";

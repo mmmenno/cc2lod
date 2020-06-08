@@ -23,7 +23,7 @@ echo "}\n\n";
 
 
 $sql = "select * 
-		from tbladdress 
+		from tblAddress 
 		limit 3000000";
 $result = $mysqli->query($sql);
 

@@ -74,7 +74,7 @@ while ($row = $result->fetch_assoc()) {
 
     $s1 = "select x.*, i.new_id
 		from tblJoinCompanyPerson as x 
-		left join tblcompany as c on x.company_id = c.company_id
+		left join tblCompany as c on x.company_id = c.company_id
 		left join RPID as i on c.company_id = i.old_id
 		where x.person_id = '" . $row['person_id'] . "'
 		order by x.s_order";
@@ -100,7 +100,7 @@ while ($row = $result->fetch_assoc()) {
 
 	$s1 = "select x.*, i.new_id
 		from tblJoinVenuePerson as x 
-		left join tblvenue as v on x.venue_id = v.venue_id
+		left join tblVenue as v on x.venue_id = v.venue_id
 		left join BiosID as i on v.venue_id = i.old_id
 		where x.person_id = '" . $row['person_id'] . "'
 		order by x.s_order";
