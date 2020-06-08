@@ -12,7 +12,7 @@ $prefixes = "
 @prefix wd: <http://www.wikidata.org/entity/> . 
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> . 
-@prefix dcterms: <http://purl.org/dc/terms/format> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> . 
 @prefix schema: <http://schema.org/> . \n\n";
 echo $prefixes;
