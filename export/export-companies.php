@@ -69,7 +69,7 @@ while ($row = $result->fetch_assoc()) {
 
 	$s1 = "select x.*, i.new_id
 		from tblJoinCompanyCompany as x 
-		left join tblcompany as c on x.company_id = c.company_id
+		left join tblCompany as c on x.company_id = c.company_id
 		left join RPID as i on c.company_id = i.old_id
 		where x.subsidiary_id = '" . $row['company_id'] . "'
 		order by x.s_order";

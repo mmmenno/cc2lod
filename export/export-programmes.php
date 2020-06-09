@@ -12,7 +12,7 @@ $prefixes = "
 @prefix wd: <http://www.wikidata.org/entity/> . 
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> . 
-@prefix dcterms: <http://purl.org/dc/terms/format> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> . 
 @prefix schema: <http://schema.org/> . \n\n";
 echo $prefixes;
@@ -29,8 +29,8 @@ echo "<https://data.create.humanities.uva.nl/id/cinemacontext/> {\n\n";
 
 
 $sql = "select p.programme_id,p.venue_id,p.programme_title,p.programme_info, v.venue_type
-		from tblprogramme as p
-		left join tblvenue as v on p.venue_id = v.venue_id";
+		from tblProgramme as p
+		left join tblVenue as v on p.venue_id = v.venue_id";
 $result = $mysqli->query($sql);
 
 while ($row = $result->fetch_assoc()) {
@@ -88,7 +88,7 @@ while ($row = $result->fetch_assoc()) {
 		// also, programmes are joined to a company if it's a traveling cinema
 	 	$s6 = "select c.*, i.new_id
 			from tblJoinProgrammeCompany as x 
-			left join tblcompany as c on x.company_id = c.company_id
+			left join tblCompany as c on x.company_id = c.company_id
 			left join RPID as i on c.company_id = i.old_id
 			where x.programme_id = '" . $row['programme_id'] . "'";
 		$res6 = $mysqli->query($s6);

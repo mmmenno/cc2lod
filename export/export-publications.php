@@ -29,7 +29,7 @@ echo "<https://data.create.humanities.uva.nl/id/cinemacontext/> {\n\n";
 
 
 $sql = "select * 
-		from tblpublication
+		from tblPublication
 		limit 3000000000";
 $result = $mysqli->query($sql);
 

@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  cc:
+    build: .
+    user: "${UID}:${GID}"
+    restart: on-failure
+    volumes:
+      - ./:/usr/src/cc2lod/export
+    command: >
+        bash -c "php /usr/src/cc2lod/export/export-theaters.php > /usr/src/cc2lod/export/trig/theaters.trig;
+                 php /usr/src/cc2lod/export/export-publications.php > /usr/src/cc2lod/export/trig/publications.trig;
+                 php /usr/src/cc2lod/export/export-places.php > /usr/src/cc2lod/export/trig/places.trig;
+                 php /usr/src/cc2lod/export/export-persons.php > /usr/src/cc2lod/export/trig/persons.trig;
+                 php /usr/src/cc2lod/export/export-films.php > /usr/src/cc2lod/export/trig/films.trig;
+                 php /usr/src/cc2lod/export/export-constructionhistory.php > /usr/src/cc2lod/export/trig/constructionhistory.trig;
+                 php /usr/src/cc2lod/export/export-companies.php > /usr/src/cc2lod/export/trig/companies.trig;
+                 php /usr/src/cc2lod/export/export-archives.php > /usr/src/cc2lod/export/trig/archives.trig;
+                 php /usr/src/cc2lod/export/export-programmes.php > /usr/src/cc2lod/export/trig/programmes.trig;
+                 php /usr/src/cc2lod/export/export-ratings.php > /usr/src/cc2lod/export/trig/ratings.trig"
+    depends_on:
+      - db
+
+  db:
+    image: mysql
+    volumes:
+      - ./db/ccc_dump_april-2020.mysql:/docker-entrypoint-initdb.d/dump.sql:ro
+    environment:
+      MYSQL_ROOT_PASSWORD: cinemacontext
+      MYSQL_DATABASE: cinemacontext
+    ports:
+      - "3306:3306"
+

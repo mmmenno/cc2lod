@@ -30,7 +30,7 @@ echo "<https://data.create.humanities.uva.nl/id/cinemacontext/> {\n\n";
 
 
 $sql = "select * 
-        from tblfilm";
+        from tblFilm";
 $result = $mysqli->query($sql);
 
 while ($row = $result->fetch_assoc()) {
@@ -109,7 +109,7 @@ while ($row = $result->fetch_assoc()) {
 // Now, episodes:
 
 $sql = "select * 
-        from tblfilmepisode";
+        from tblFilmEpisode";
 $result = $mysqli->query($sql);
 
 while ($row = $result->fetch_assoc()) {
