@@ -10,7 +10,6 @@ $prefixes = "
 @prefix owl: <http://www.w3.org/2002/07/owl#> . 
 @prefix wd: <http://www.wikidata.org/entity/> . 
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> . 
-@prefix dbo: <http://dbpedia.org/ontology/> .
 @prefix schema: <http://schema.org/> . \n\n";
 echo $prefixes;
 
@@ -116,7 +115,6 @@ while ($row = $result->fetch_assoc()) {
 
 	}
 
-	//http://dbpedia.org/ontology/seatingCapacity
 
 	$s4 = "select *
 		from tblVenueSeats 
@@ -128,8 +126,8 @@ while ($row = $result->fetch_assoc()) {
 
 		//$start = turtletime($r4['seats_year']);
 
-		echo "\tdbo:seatingCapacity [\n";
-		echo "\t\tdbo:seatingCapacity \"" . $r4['number_of_seats'] . "\"^^xsd:int ;\n";
+		echo "\tschema:maximumAttendeeCapacity [\n";
+		echo "\t\tschema:maximumAttendeeCapacity \"" . $r4['number_of_seats'] . "\"^^xsd:int ;\n";
 		echo "\t\tsem:hasLatestBeginTimeStamp \"" . $r4['seats_year'] . "-12-31\"^^xsd:date ;\n";
         echo "\t\ta schema:Role ; \n";
 	    echo "\t] ;\n";

@@ -12,7 +12,7 @@ $prefixes = "
 @prefix wd: <http://www.wikidata.org/entity/> . 
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> . 
-@prefix dcterms: <http://purl.org/dc/terms/format> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> . 
 @prefix schema: <http://schema.org/> . \n\n";
 echo $prefixes;
@@ -74,6 +74,31 @@ while ($row = $result->fetch_assoc()) {
         echo "\tschema:genre \"fiction\" ;\n";
     }elseif($row['fiction'] == "N"){
         echo "\tschema:genre \"nonfiction\" ;\n";
+    }
+
+    $s2 = "select x.*, i.new_id
+        from tblJoinFilmCompany as x 
+        left join tblcompany as c on x.company_id = c.company_id
+        left join RPID as i on c.company_id = i.old_id
+        where x.film_id = '" . $row['film_id'] . "'
+        order by x.s_order";
+    $res2 = $mysqli->query($s2);
+
+    while ($r2 = $res2->fetch_assoc()) {
+
+        $period = turtletime($r2['start_date'],$r2['end_date']);
+
+        echo "\tschema:publisher [\n";
+        echo "\t\tschema:publisher <http://www.cinemacontext.nl/id/R" . voorloopnullen($r2['new_id']) . "> ;\n";
+        //if(strlen($r2['info'])){
+        //    echo "\t\tschema:description \"" . esc($r2['info']) . "\" ;\n";
+        //}
+        if(strlen($period)){
+            echo str_replace("\t","\t\t",$period);
+        }
+        echo "\t\ta schema:Role ; \n";
+        echo "\t] ;\n";
+
     }
 
     echo  "\ta schema:Movie .\n\n";
