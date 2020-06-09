@@ -22,8 +22,10 @@ The resulting turtle looks like this:
 		schema:name "bioscoopexploitatie" ;
 		a pext:IndustrySector ;
 	] ;
-	dc:type [
-		schema:name "N.V." ;
+	gleio:hasLegalForm [
+		a gleio:LegalForm ;
+		skos:altLabel "N.V." ;
+		gleio:hasEntityLegalFormCode "B5PM" ;
 	] ;
 	schema:citation [
 		schema:citation <http://www.cinemacontext.nl/id/publication/id1151255550914> ;
@@ -44,6 +46,7 @@ A person might work for a company.
 		pnv:literalName "W. Gunneman" ;
 		pnv:initials "W." ;
 		pnv:surname "Gunneman" ;
+		a pnv:PersonName ;
 	] ;
 	schema:worksFor [
 		a schema:OrganizationRole ;
@@ -82,14 +85,16 @@ Theaters, or 'venues' are organizations existing on a specific location with a s
 		schema:screenCount "2"^^xsd:int ;
 		sem:hasEarliestBeginTimeStamp "1975-01-01"^^xsd:date ;
 		sem:hasLatestBeginTimeStamp "1975-01-31"^^xsd:date ;
+		a schema:Role ;
 	] ;
 	schema:screenCount [
 		schema:screenCount "1"^^xsd:int ;
 		sem:hasEarliestBeginTimeStamp "1938-01-01"^^xsd:date ;
 		sem:hasLatestBeginTimeStamp "1938-12-31"^^xsd:date ;
+		a schema:Role ;
 	] ;
-	dbo:seatingCapacity [
-		dbo:seatingCapacity "750"^^xsd:int ;
+	schema:maximumAttendeeCapacity [
+		schema:maximumAttendeeCapacity "750"^^xsd:int ;
 		sem:hasLatestBeginTimeStamp "1938-12-31"^^xsd:date ;
 		a schema:Role ; 
 	] ;
@@ -105,20 +110,20 @@ Theaters, or 'venues' are organizations existing on a specific location with a s
 Mobile theaters are like MovieTheaters, in the sense that you could go there to see a movie. And they are located at a schema:Place, at least at a specific moment in time. Mobile cinemas have an additionalType of `wd:Q6605486` (mobile cinema) as well.
 
 ```
-<http://www.cinemacontext.nl/id/stand/Venid1114084252705>
+<http://www.cinemacontext.nl/id/B001973>
 	schema:name "Mobile Theatre" ;
-	schema:location <http://www.cinemacontext.nl/id/place/id1114084252705> ;
+	schema:location <http://www.cinemacontext.nl/id/place/id1140887559002> ;
 	schema:additionalType wd:Q6605486 ;
 	a schema:MovieTheater .
 ``` 
 ### eventvenues
 
-A `schema:EventVenue` might be a hotel (like the Kurhaus), a concerthall or even a church.
+A `schema:EventVenue` might be a hotel, a concerthall or even a church.
 
 ```
-<http://www.cinemacontext.nl/id/eventvenue/VenPerc978>
-	schema:name "Kurhaus (Scheveningen)" ;
-	schema:location <http://www.cinemacontext.nl/id/place/Perc978> ;
+<http://www.cinemacontext.nl/id/B001744>
+	schema:name "Hollandsche Schouwburg" ;
+	schema:location <http://www.cinemacontext.nl/id/place/id1104540487036> ;
 	a schema:EventVenue .
 ```
 
@@ -184,22 +189,34 @@ Surprisingly, when a building is demolished, often the dc:type 'Verbouwing' is u
 A 'programme' is a `schema:Event` consisting of one or more `schema:ScreeningEvent`s, that was held in a specific theater on one or more dates. Sometimes a film was screened under another name (a Dutch name, for example). In such cases this name is mentioned as a `schema:alternateName`.
 
 ```
-<http://www.cinemacontext.nl/id/V082378>
-	schema:startDate "1937-08-13"^^xsd:date ;
-	schema:location <http://www.cinemacontext.nl/id/B000696> ;
+<http://www.cinemacontext.nl/id/V062775>
+	schema:startDate "1918-10-25"^^xsd:date ;
+	schema:location <http://www.cinemacontext.nl/id/B001452> ;
 	schema:subEvent [
-		schema:workPresented <http://www.cinemacontext.nl/id/F009244> ;
+		schema:workPresented <http://www.cinemacontext.nl/id/F031808> ;
 		schema:position "1"^^xsd:int ;
-		schema:alternateName "Geheim van de blauwe kamer, Het" ;
+		schema:alternateName "Regimentsdochter, De" ;
 		schema:inLanguage "NL" ;
 		a schema:ScreeningEvent ;
 	] ;
 	schema:subEvent [
-		schema:workPresented <http://www.cinemacontext.nl/id/F009097> ;
+		schema:workPresented <http://www.cinemacontext.nl/id/F007737> ;
 		schema:position "2"^^xsd:int ;
-		schema:alternateName "Bij de blonde Kathrien" ;
+		schema:alternateName "Prinses van Neutralië, De" ;
 		schema:inLanguage "NL" ;
 		a schema:ScreeningEvent ;
+	] ;
+	schema:subEvent [
+		schema:workPresented <http://www.cinemacontext.nl/id/F011327> ;
+		schema:position "3"^^xsd:int ;
+		schema:alternateName "Medaillon, Het" ;
+		schema:inLanguage "NL" ;
+		a schema:ScreeningEvent ;
+	] ;
+	schema:citation [
+		schema:citation <http://www.cinemacontext.nl/id/publication/id1113821541222> ;
+		schema:description "Krant uit de week van de voorstelling" ;
+		a schema:Role ;
 	] ;
 	a schema:Event .
 ```
@@ -247,6 +264,8 @@ If the location where the schema:Event was held is a mobile theater, the event i
 
 ## films
 
+For 'distributors', the property `schema:publisher` is used.
+
 ```
 <http://www.cinemacontext.nl/id/F002877>
 	schema:name "Daydreams (1922)" ;
@@ -261,5 +280,39 @@ If the location where the schema:Event was held is a mobile theater, the event i
 	] ;
 	dcterms:format "35mm" ;
 	schema:genre "fiction" ;
+	schema:publisher [
+		schema:publisher <http://www.cinemacontext.nl/id/R000097> ;
+		a schema:Role ; 
+	] ;
 	a schema:Movie .
+```
+
+
+## ratings
+
+Films might be rated by a `schema:Rating`. These ratings might have a `schema:ratingValue` of either 'recommended' or 'not recommended', a `schema:text` and a `schema:ratingExplanation`. In the `schema:about` nodes, names and descriptions of the film as written in the rating report are mentioned.
+
+```
+<http://www.cinemacontext.nl/id/F020122>
+	schema:contentRating <http://www.cinemacontext.nl/id/rating/Dossier10001> . 
+
+<http://www.cinemacontext.nl/id/rating/Dossier10001>
+	schema:identifier "V1308" ;
+	schema:dateCreated "1953-09-15"^^xsd:date ;
+	schema:author <http://www.cinemacontext.nl/id/R001681> ;
+	schema:text "18 jaar" ;
+	schema:ratingValue "not recommended" ;
+	schema:ratingExplanation "te sensationeel voor onder de 18" ;
+	schema:about [
+		a schema:Role ;
+		schema:name "Vrijdag, de dertiende" ;
+		schema:description "r. Arthur Lubin, Boris Karloff" ;
+		schema:about <http://www.cinemacontext.nl/id/F020122> ;
+	] ;
+	schema:about [
+		a schema:Role ;
+		schema:name "Black Friday" ;
+		schema:about <http://www.cinemacontext.nl/id/F020122> ;
+	] ;
+	a schema:Rating, schema:CreativeWork .
 ```

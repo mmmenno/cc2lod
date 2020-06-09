@@ -1,4 +1,7 @@
 # Cinema Context MySQL -> LOD
 
-Scripts generating the LOD version of Cinema Context
+__This repository is no longer active! You will find a new and updated repository [here](https://gitlab.com/uvacreate/cinema-context/cinema-context-rdf)__
+
+
+
 
